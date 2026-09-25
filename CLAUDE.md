@@ -83,5 +83,12 @@ Build the full custom Gospelscribe theme (opening, Testament gate, books, journe
 ## Phase 1 status (built Sept 25, 2026)
 - `theme/sections/gs-matthew-journey.liquid`: the whole journey (opening, gate, 6 stops, shop grid, product popup with real sizes/prices, add to bag via Shopify's cart). Everything is editable in the theme editor: scene images, products, text. Styles are scoped under `.gs-mj` so it can't restyle the rest of his theme.
 - `theme/templates/page.matthew.json`: page template pre-filled with all 6 stops in Bryant's words.
-- How it gets into Shopify: Bryant pastes these 2 files into a **duplicate** of his live theme via Online Store → Themes → Edit code. Shopify CLI can't be used from the cloud session because its network policy blocks Shopify; a desktop session can use CLI instead.
+- **Installed Sept 25 via the Shopify connector** (Admin API, no CLI):
+  - Live theme: "cleanslatepro-v1-10-10-licensed" (Clean Slate Pro, OS 2.0, id 153488130117). NOT touched.
+  - Working copy: **"Clean Slate + Matthew Journey"** (id 153989251141, unpublished) holds both files. Upload method: `themeFilesUpsert` with body type URL pointing at the raw GitHub file at a pinned commit (repo is public), then verify `checksumMd5` matches local.
+  - Bryant's other unpublished themes ("Clean slate REMAKE MATTHEW", "Horizon") are his. Leave them alone.
+  - The 8 Higgsfield paintings were imported into Shopify Files as `gs-matthew-<scene>.png` (1344×752, standard quality) and referenced in the template as `shopify://shop_images/gs-matthew-<scene>.png`. Swap in hi-res re-renders later using the same filenames (fileCreate with duplicateResolutionMode REPLACE).
+  - Page "The Book of Matthew" (/pages/book-of-matthew, id 122870792261) was created **hidden**, using template suffix `matthew`.
+- The connector cannot publish themes or write to the live theme. Bryant clicks Publish himself.
 - Draft products don't appear on the storefront, so the page can't show them. Products must be Active (or Unlisted) for the journey to show them and add them to the bag.
+- As of Sept 25 none of the 5 Matthew pieces exist in Shopify yet. The stops show "Coming soon" cards until products are picked.
