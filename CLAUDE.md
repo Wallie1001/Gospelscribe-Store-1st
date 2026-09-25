@@ -88,6 +88,8 @@ Build the full custom Gospelscribe theme (opening, Testament gate, books, journe
   - Bryant's other unpublished themes ("Clean slate REMAKE MATTHEW", "Horizon") are his. Leave them alone.
   - The 8 Higgsfield paintings were imported into Shopify Files as `gs-matthew-<scene>.png` (1344×752, standard quality) and referenced in the template as `shopify://shop_images/gs-matthew-<scene>.png`. Swap in hi-res re-renders later using the same filenames (fileCreate with duplicateResolutionMode REPLACE).
   - Page "The Book of Matthew" (/pages/book-of-matthew, id 122870792261) was created **hidden**, using template suffix `matthew`.
+- **Home page = the journey** (Bryant's call, Sept 25): the copy's `templates/index.json` has `matthew_journey` first, and all his original home sections follow in the same order, unchanged. The copy's header has `transparent_on_home: true`, so the logo floats over the lamp scene on home. `theme/templates/index.json` in the repo is a snapshot. If Bryant edits home in the editor, Shopify's copy is the truth, so re-read it before overwriting.
+- Checksum trick: Shopify stores JSON templates exactly as uploaded. When it has normalized a file, its md5 matches compact JSON with `/` escaped as `\/` (no comment header).
 - The connector cannot publish themes or write to the live theme. Bryant clicks Publish himself.
 - Draft products don't appear on the storefront, so the page can't show them. Products must be Active (or Unlisted) for the journey to show them and add them to the bag.
 - Products (created by Bryant Sept 25, vendor ODMPOD/Tapstitch, all $64.99, Color + Size variants), linked in the template by handle:
