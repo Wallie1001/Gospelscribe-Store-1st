@@ -1,0 +1,609 @@
+{%- comment -%}
+  Gospelscribe · Book of Matthew journey (Phase 1)
+  A self-contained section for any Online Store 2.0 theme.
+  Products, cart, and checkout stay 100% Shopify: this section only
+  links to real products and uses Shopify's own cart (/cart/add.js).
+  Everything is scoped under .gs-mj so it can't restyle the rest of the theme.
+{%- endcomment -%}
+
+{%- liquid
+  assign sid = section.id
+  assign gate_id = 'gs-gate-' | append: sid
+  assign shop_id = 'gs-shop-' | append: sid
+  assign first_stop_id = ''
+  for block in section.blocks
+    if block.type == 'stop'
+      assign first_stop_id = 'gs-stop-' | append: block.id
+      break
+    endif
+  endfor
+  if section.settings.show_gate
+    assign open_target = gate_id
+  elsif first_stop_id != ''
+    assign open_target = first_stop_id
+  else
+    assign open_target = shop_id
+  endif
+-%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Cardo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+.gs-mj{
+  --umber:#15110E;--umber-2:#211A15;--parch:#E8DCC4;--parch-dim:#BFB29A;
+  --gold:#C9A24D;--gold-hi:#E6C878;--crimson:#A5282A;--bronze:#6B5A48;--red-letter:#E07A6E;
+  --display:'IM Fell English','Iowan Old Style',Palatino,Georgia,serif;
+  --caps:'IM Fell English SC','IM Fell English',Palatino,Georgia,serif;
+  --body:'Cardo','Iowan Old Style',Palatino,Georgia,serif;
+  background:var(--umber);color:var(--parch);font-family:var(--body);font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;color-scheme:dark;position:relative;
+}
+.gs-mj *,.gs-mj *::before,.gs-mj *::after{box-sizing:border-box}
+.gs-mj h1,.gs-mj h2,.gs-mj h3,.gs-mj h4,.gs-mj p{letter-spacing:normal;text-transform:none;color:inherit}
+.gs-mj a{color:inherit}
+.gs-mj button{font:inherit;color:inherit;cursor:pointer;-webkit-appearance:none;appearance:none;box-shadow:none;min-height:0;min-width:0}
+.gs-mj :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.gs-mj img{max-width:100%}
+
+/* scenes */
+.gs-scene{position:relative;min-height:100vh;min-height:100svh;display:flex;overflow:hidden;isolation:isolate}
+.gs-bg{position:absolute;inset:0;z-index:-2}
+.gs-bg img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.04)}
+.gs-scene::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none}
+.gs-fb-lamp{background:radial-gradient(ellipse at 50% 58%,rgba(230,176,90,.45),rgba(120,70,25,.18) 25%,transparent 55%),#0D0A08}
+.gs-fb-gate{background:radial-gradient(ellipse at 66% 55%,rgba(230,190,110,.5),transparent 40%),radial-gradient(ellipse at 34% 55%,rgba(40,30,22,.9),transparent 40%),linear-gradient(#1A1411,#0C0908)}
+.gs-fb-bethlehem{background:radial-gradient(circle at 62% 16%,rgba(245,225,160,.9),rgba(227,194,122,.25) 6%,transparent 22%),linear-gradient(#131A2C,#0E0C0B 80%)}
+.gs-fb-wilderness{background:radial-gradient(ellipse at 75% 30%,rgba(236,170,80,.55),transparent 45%),linear-gradient(#7A4E22,#2A1A0D 70%,#120C08)}
+.gs-fb-galilee{background:radial-gradient(ellipse at 78% 12%,rgba(230,190,110,.55),transparent 32%),linear-gradient(#2E3B40,#101618 75%)}
+.gs-fb-cross{background:radial-gradient(ellipse at 50% 18%,rgba(200,170,140,.25),transparent 30%),linear-gradient(#3A1414,#1A1212 60%,#0E0A0A)}
+.gs-fb-tomb{background:radial-gradient(ellipse at 45% 55%,rgba(255,220,160,.7),rgba(233,185,138,.25) 18%,transparent 45%),linear-gradient(#5A3A30,#16100D 80%)}
+.gs-fb-mountain{background:radial-gradient(ellipse at 50% 38%,rgba(240,168,80,.8),rgba(240,168,80,.2) 22%,transparent 50%),linear-gradient(#6A3C1C,#1A120C 75%)}
+
+/* opening */
+.gs-intro{align-items:center;justify-content:center;text-align:center}
+.gs-intro::after{background:radial-gradient(ellipse at center,rgba(0,0,0,.1),rgba(0,0,0,.75) 75%)}
+.gs-glow{position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 55%,rgba(255,190,100,.18),transparent 45%);animation:gs-flicker 3.2s infinite}
+@keyframes gs-flicker{0%,100%{opacity:.85}20%{opacity:1}35%{opacity:.7}50%{opacity:.95}72%{opacity:.8}}
+.gs-intro-inner{padding:24px;max-width:640px;opacity:0;animation:gs-rise 1.6s ease .4s forwards}
+@keyframes gs-rise{to{opacity:1}}
+.gs-mj .gs-intro h1{font-family:var(--display);font-weight:400;font-size:clamp(3.2rem,12vw,6.4rem);line-height:.95;margin:0;color:var(--parch);text-shadow:0 2px 30px rgba(0,0,0,.8)}
+.gs-mj .gs-tagline{font-family:var(--display);font-style:italic;font-size:clamp(1.2rem,3.4vw,1.6rem);color:var(--gold-hi);margin:14px 0 36px}
+.gs-mj .gs-gold-btn{display:inline-block;background:rgba(12,9,7,.55);border:1px solid var(--gold);color:var(--gold-hi);padding:14px 30px;font-family:var(--caps);font-size:1.15rem;letter-spacing:.06em;border-radius:1px;text-decoration:none}
+.gs-mj .gs-gold-btn:hover{background:rgba(201,162,77,.15)}
+.gs-intro small{display:block;margin-top:18px;font-style:italic;color:var(--parch-dim);font-size:.95rem}
+
+/* gate */
+.gs-gate{align-items:center;justify-content:center;text-align:center;padding:100px 20px 80px}
+.gs-gate::after{background:linear-gradient(180deg,rgba(10,8,6,.65),rgba(10,8,6,.35) 40%,rgba(10,8,6,.85))}
+.gs-mj .gs-gate h2{font-family:var(--display);font-weight:400;font-size:clamp(2.2rem,6vw,3.6rem);margin:0 0 8px}
+.gs-mj .gs-sub{font-style:italic;color:var(--parch-dim);font-size:1.15rem;margin:0 0 36px}
+.gs-doors{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:640px;margin:0 auto}
+.gs-mj .gs-door{padding:34px 18px;border:1px solid rgba(201,162,77,.45);background:rgba(12,9,7,.6);border-radius:120px 120px 2px 2px;min-height:210px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;text-align:center}
+.gs-door strong{font-family:var(--display);font-weight:400;font-size:1.55rem;line-height:1.1}
+.gs-door span{font-family:var(--caps);font-size:.98rem;letter-spacing:.06em;color:var(--parch-dim)}
+.gs-mj .gs-door.is-open{border-color:var(--gold);box-shadow:inset 0 0 60px rgba(201,162,77,.18)}
+.gs-door.is-open span{color:var(--gold-hi)}
+.gs-mj .gs-door.is-open:hover{background:rgba(40,28,14,.7)}
+.gs-mj .gs-door[disabled]{cursor:not-allowed;opacity:.72}
+.gs-seal{width:30px;height:30px;border-radius:50%;background:var(--crimson);margin:0 auto 8px;box-shadow:inset 0 0 0 3px rgba(0,0,0,.25)}
+.gs-books{max-width:640px;margin:34px auto 0}
+.gs-js .gs-books:not(.show){display:none}
+.gs-js .gs-books.show{animation:gs-rise .8s ease forwards;opacity:0}
+.gs-mj .gs-books h3{font-family:var(--caps);font-weight:400;font-size:1.1rem;letter-spacing:.08em;color:var(--gold-hi);margin:0 0 14px}
+.gs-book-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.gs-mj .gs-book{padding:16px 8px;border:1px solid rgba(232,220,196,.2);background:rgba(12,9,7,.6);border-radius:2px;text-align:center}
+.gs-book b{display:block;font-family:var(--display);font-weight:400;font-size:1.3rem}
+.gs-book small{font-family:var(--caps);color:var(--parch-dim);font-size:.85rem;letter-spacing:.05em}
+.gs-mj .gs-book.is-open{border-color:var(--gold)}
+.gs-book.is-open small{color:var(--gold-hi)}
+.gs-mj .gs-book[disabled]{opacity:.5;cursor:not-allowed}
+
+/* stops */
+.gs-stop{align-items:flex-end;padding:110px 24px 100px 64px}
+.gs-stop::after{background:linear-gradient(180deg,rgba(10,8,6,.2) 0%,rgba(10,8,6,.15) 35%,rgba(10,8,6,.88) 80%,rgba(10,8,6,.96))}
+.gs-stop-inner{max-width:1120px;width:100%;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.8fr);gap:48px;align-items:end}
+.gs-js .gs-stop .gs-stop-inner{opacity:0;transform:translateY(24px);transition:opacity .9s ease,transform .9s ease}
+.gs-js .gs-stop.is-in .gs-stop-inner{opacity:1;transform:none}
+.gs-mj .gs-ref{font-family:var(--caps);letter-spacing:.08em;color:var(--gold-hi);font-size:1.05rem;margin:0 0 6px}
+.gs-mj .gs-place{font-family:var(--display);font-weight:400;font-size:clamp(2.6rem,7vw,4.8rem);line-height:1;margin:0 0 20px;text-shadow:0 2px 24px rgba(0,0,0,.7)}
+.gs-mj .gs-verse{font-family:var(--display);font-style:italic;font-size:clamp(1.25rem,2.6vw,1.6rem);line-height:1.45;margin:0 0 6px;max-width:34em}
+.gs-mj .gs-verse.is-red{color:var(--red-letter)}
+.gs-mj .gs-vref{font-family:var(--caps);color:var(--parch-dim);letter-spacing:.06em;margin:0 0 22px}
+.gs-mj .gs-story{font-size:1.1rem;line-height:1.7;max-width:36em;margin:0}
+.gs-mj .gs-piece{background:rgba(14,11,9,.78);border:1px solid rgba(201,162,77,.4);padding:18px;border-radius:2px;display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:center;text-align:left;width:100%;text-decoration:none}
+.gs-mj a.gs-piece:hover{border-color:var(--gold)}
+.gs-ph{background:var(--umber-2);aspect-ratio:1/1.1;display:grid;place-items:center;border:1px solid rgba(232,220,196,.08);overflow:hidden}
+.gs-ph img{width:100%;height:100%;object-fit:cover;display:block}
+.gs-mj .gs-piece h4{font-family:var(--display);font-weight:400;font-size:1.35rem;margin:0 0 4px;line-height:1.15}
+.gs-mj .gs-piece p{margin:0;color:var(--parch-dim);font-size:.95rem}
+.gs-go{display:inline-block;margin-top:8px;font-family:var(--caps);color:var(--gold-hi);letter-spacing:.05em}
+.gs-mj .gs-silence{font-family:var(--display);font-style:italic;color:var(--parch-dim);font-size:1.1rem;border-left:1px solid var(--crimson);padding-left:16px;margin:0}
+.gs-commission{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.gs-mj .gs-plain-btn{display:inline-block;background:none;border:1px solid rgba(232,220,196,.35);color:var(--parch);padding:13px 22px;font-family:var(--caps);font-size:1.05rem;letter-spacing:.05em;border-radius:1px;text-decoration:none;text-align:center}
+.gs-mj .gs-plain-btn:hover{border-color:var(--parch)}
+
+/* progress rail */
+.gs-rail{position:fixed;left:22px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:18px;opacity:0;pointer-events:none;transition:opacity .4s}
+.gs-rail.show{opacity:1;pointer-events:auto}
+.gs-rail::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:rgba(201,162,77,.35);z-index:-1}
+.gs-rail a{display:block;width:11px;height:11px;border-radius:50%;border:1px solid var(--gold);background:var(--umber);position:relative}
+.gs-rail a[aria-current="true"]{background:var(--gold);box-shadow:0 0 12px rgba(201,162,77,.8)}
+.gs-rail a span{position:absolute;left:22px;top:50%;transform:translateY(-50%);white-space:nowrap;font-family:var(--caps);font-size:.9rem;color:var(--parch);opacity:0;transition:opacity .2s;pointer-events:none;text-shadow:0 1px 6px #000}
+.gs-rail a:hover span,.gs-rail a:focus-visible span,.gs-rail a[aria-current="true"] span{opacity:1}
+
+/* shop grid */
+.gs-shop{padding:90px 24px 90px;max-width:1120px;margin:0 auto}
+.gs-mj .gs-shop h2{font-family:var(--display);font-weight:400;font-size:clamp(2.2rem,6vw,3.4rem);margin:0 0 8px;text-align:center}
+.gs-shop .gs-sub{text-align:center;margin-bottom:40px}
+.gs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:22px}
+.gs-mj .gs-tile{display:block;text-decoration:none}
+.gs-tile .gs-ph{aspect-ratio:4/5;margin-bottom:12px}
+.gs-tile:hover .gs-ph{border-color:rgba(201,162,77,.5)}
+.gs-mj .gs-tile h4{font-family:var(--display);font-weight:400;font-size:1.25rem;margin:0 0 2px}
+.gs-mj .gs-tile p{margin:0;font-family:var(--caps);color:var(--parch-dim);letter-spacing:.05em;font-size:.92rem}
+.gs-editor-note{border:1px dashed var(--gold);padding:14px;margin:0 0 24px;color:var(--gold-hi);text-align:center}
+.gs-foot{text-align:center;padding:40px 20px 100px;border-top:1px solid rgba(201,162,77,.2);color:var(--parch-dim);font-style:italic}
+.gs-foot p{margin:0}
+.gs-foot b,.gs-foot strong{font-family:var(--caps);font-style:normal;color:var(--gold-hi);font-weight:400;letter-spacing:.06em}
+
+/* floating "skip to shop" + bag */
+.gs-float{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:25;display:flex;gap:8px}
+.gs-mj .gs-float a{background:rgba(21,17,14,.92);border:1px solid var(--gold);color:var(--gold-hi);padding:10px 16px;font-family:var(--caps);font-size:1rem;letter-spacing:.05em;text-decoration:none;border-radius:1px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.gs-count{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:10px;background:var(--crimson);color:#fff;font-family:var(--body);font-size:.75rem;margin-left:6px;padding:0 5px}
+
+/* product sheet */
+.gs-scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2147483000;opacity:0;pointer-events:none;transition:opacity .25s}
+.gs-scrim.show{opacity:1;pointer-events:auto}
+.gs-sheet{position:fixed;z-index:2147483001;left:50%;bottom:0;width:min(880px,100%);max-height:92vh;overflow-y:auto;transform:translate(-50%,105%);visibility:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),visibility 0s .35s;background:var(--umber-2);border-top:2px solid var(--gold);padding:26px 22px calc(26px + env(safe-area-inset-bottom,0px));color:var(--parch)}
+.gs-sheet.show{transform:translate(-50%,0);visibility:visible;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.gs-sheet-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:32px}
+.gs-sheet .gs-ph{aspect-ratio:4/5;background:var(--umber)}
+.gs-mj .gs-x{position:absolute;top:8px;right:10px;background:none;border:0;font-size:1.8rem;line-height:1;padding:6px 10px;color:var(--parch)}
+.gs-mj .gs-s-ref{font-family:var(--caps);color:var(--gold-hi);letter-spacing:.08em;margin:0}
+.gs-mj .gs-s-name{font-family:var(--display);font-weight:400;font-size:clamp(1.8rem,4vw,2.4rem);line-height:1.1;margin:6px 0 4px}
+.gs-mj .gs-s-price{color:var(--parch-dim);font-style:italic;margin:0 0 14px;font-size:1.1rem}
+.gs-mj .gs-s-note{border-left:1px solid var(--gold);padding-left:16px;margin:14px 0 22px;line-height:1.7;font-size:1.05rem}
+.gs-lbl{display:block;font-family:var(--caps);letter-spacing:.06em;color:var(--parch-dim);margin-bottom:10px}
+.gs-opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.gs-mj .gs-opt{min-width:50px;height:44px;padding:0 12px;background:none;border:1px solid rgba(232,220,196,.3);border-radius:1px;color:var(--parch)}
+.gs-mj .gs-opt[aria-pressed="true"]{background:var(--parch);color:var(--umber);border-color:var(--parch)}
+.gs-mj .gs-opt.is-out{text-decoration:line-through;opacity:.45}
+.gs-mj .gs-add{display:block;width:100%;padding:16px;border:0;border-radius:1px;background:var(--crimson);color:#fff;font-family:var(--caps);font-size:1.15rem;letter-spacing:.06em;text-align:center;text-decoration:none}
+.gs-mj .gs-add:hover{filter:brightness(1.1)}
+.gs-mj .gs-add[disabled]{opacity:.6;cursor:wait}
+.gs-mj .gs-hint{min-height:1.4em;margin:8px 0 0;color:var(--red-letter);font-style:italic}
+.gs-added{display:grid;gap:10px}
+.gs-mj .gs-added p{margin:0 0 4px;font-family:var(--display);font-size:1.3rem;color:var(--gold-hi)}
+.gs-details{display:inline-block;margin-top:14px;font-family:var(--caps);color:var(--parch-dim);letter-spacing:.05em}
+
+@media (max-width:820px){
+  .gs-stop{padding:100px 20px 96px 44px}
+  .gs-stop-inner{grid-template-columns:1fr;gap:26px}
+  .gs-rail{left:14px;gap:14px}
+  .gs-rail a span{display:none}
+  .gs-sheet-grid{grid-template-columns:1fr;gap:18px}
+  .gs-sheet .gs-ph{aspect-ratio:16/11}
+}
+@media (max-width:480px){
+  .gs-doors{gap:10px}
+  .gs-mj .gs-door{min-height:170px;padding:24px 10px}
+  .gs-door strong{font-size:1.25rem}
+  .gs-book-row{grid-template-columns:1fr 1fr}
+  .gs-mj .gs-float a{padding:9px 12px;font-size:.95rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .gs-glow{animation:none}
+  .gs-intro-inner,.gs-js .gs-books.show{animation:none;opacity:1}
+  .gs-js .gs-stop .gs-stop-inner{opacity:1;transform:none;transition:none}
+  .gs-sheet,.gs-scrim,.gs-rail{transition:none}
+}
+</style>
+
+{%- capture tee_svg -%}
+  <svg viewBox="0 0 200 220" width="64" aria-hidden="true"><path d="M60 24 L84 14 Q100 30 116 14 L140 24 L186 54 L166 88 L148 78 L148 208 L52 208 L52 78 L34 88 L14 54 Z" fill="none" stroke="#6B5A48" stroke-width="2"/><path d="M84 14 Q100 32 116 14" fill="none" stroke="#6B5A48" stroke-width="2"/></svg>
+{%- endcapture -%}
+
+<div
+  class="gs-mj"
+  id="gs-mj-{{ sid }}"
+  data-gs-root
+  data-cart-add="{{ routes.cart_add_url }}"
+  data-cart-url="{{ routes.cart_url }}"
+>
+
+  {%- if section.settings.show_opening -%}
+    <section class="gs-scene gs-intro" aria-label="Opening">
+      <div class="gs-bg gs-fb-lamp">
+        {%- if section.settings.lamp_image != blank -%}
+          {{ section.settings.lamp_image | image_url: width: 1920 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '480, 750, 1080, 1500, 1920', sizes: '100vw', alt: '' }}
+        {%- endif -%}
+      </div>
+      <div class="gs-glow" aria-hidden="true"></div>
+      <div class="gs-intro-inner">
+        <h1>{{ section.settings.opening_title | escape }}</h1>
+        <p class="gs-tagline">{{ section.settings.opening_tagline | escape }}</p>
+        <a class="gs-gold-btn" href="#{{ open_target }}" data-gs-jump="{{ open_target }}">{{ section.settings.opening_button | escape }}</a>
+        {%- if section.settings.opening_note != blank -%}
+          <small>{{ section.settings.opening_note | escape }}</small>
+        {%- endif -%}
+      </div>
+    </section>
+  {%- endif -%}
+
+  {%- if section.settings.show_gate -%}
+    <section class="gs-scene gs-gate" id="{{ gate_id }}" aria-labelledby="gs-gate-title-{{ sid }}">
+      <div class="gs-bg gs-fb-gate">
+        {%- if section.settings.gate_image != blank -%}
+          {{ section.settings.gate_image | image_url: width: 1920 | image_tag: loading: 'lazy', widths: '480, 750, 1080, 1500, 1920', sizes: '100vw', alt: '' }}
+        {%- endif -%}
+      </div>
+      <div style="width:100%">
+        <h2 id="gs-gate-title-{{ sid }}">{{ section.settings.gate_title | escape }}</h2>
+        <p class="gs-sub">{{ section.settings.gate_sub | escape }}</p>
+        <div class="gs-doors">
+          <button type="button" class="gs-door" disabled aria-label="Old Testament, sealed, coming soon">
+            <div class="gs-seal" aria-hidden="true"></div>
+            <strong>The Old Testament</strong><span>Sealed · Coming soon</span>
+          </button>
+          <button type="button" class="gs-door is-open" data-gs-nt aria-expanded="false" aria-controls="gs-books-{{ sid }}">
+            <strong>The New Testament</strong><span>Enter</span>
+          </button>
+        </div>
+        <div class="gs-books" id="gs-books-{{ sid }}">
+          <h3>The Gospels</h3>
+          <div class="gs-book-row">
+            <a class="gs-book is-open" href="#{{ first_stop_id }}" data-gs-jump="{{ first_stop_id }}" style="text-decoration:none"><b>Matthew</b><small>Open now</small></a>
+            <button type="button" class="gs-book" disabled><b>Mark</b><small>Sealed</small></button>
+            <button type="button" class="gs-book" disabled><b>Luke</b><small>Sealed</small></button>
+            <button type="button" class="gs-book" disabled><b>John</b><small>Sealed</small></button>
+          </div>
+        </div>
+      </div>
+    </section>
+  {%- endif -%}
+
+  {%- assign stop_count = 0 -%}
+  {%- assign has_products = false -%}
+  {%- for block in section.blocks -%}
+    {%- if block.type != 'stop' -%}{%- continue -%}{%- endif -%}
+    {%- liquid
+      assign stop_count = stop_count | plus: 1
+      assign b = block.settings
+      assign p = b.product
+      if p != blank
+        assign has_products = true
+      endif
+      assign piece_name = b.piece_name
+      if piece_name == blank and p != blank
+        assign piece_name = p.title
+      endif
+    -%}
+    <section
+      class="gs-scene gs-stop"
+      id="gs-stop-{{ block.id }}"
+      data-gs-stop
+      data-gs-label="{{ b.place | escape }}"
+      aria-labelledby="gs-t-{{ block.id }}"
+      {{ block.shopify_attributes }}
+    >
+      <div class="gs-bg gs-fb-{{ b.mood }}">
+        {%- if b.image != blank -%}
+          {{ b.image | image_url: width: 1920 | image_tag: loading: 'lazy', widths: '480, 750, 1080, 1500, 1920', sizes: '100vw', alt: '' }}
+        {%- endif -%}
+      </div>
+      <div class="gs-stop-inner">
+        <div>
+          <p class="gs-ref">{{ b.ref | escape }}</p>
+          <h2 class="gs-place" id="gs-t-{{ block.id }}">{{ b.place | escape }}</h2>
+          <p class="gs-verse{% if b.red_letter %} is-red{% endif %}">{{ b.verse | escape }}</p>
+          <p class="gs-vref">{{ b.verse_ref | escape }}</p>
+          <p class="gs-story">{{ b.story | escape }}</p>
+          {%- if b.show_commission -%}
+            <div class="gs-commission">
+              <a class="gs-gold-btn" href="#{{ shop_id }}" data-gs-jump="{{ shop_id }}">Shop the collection</a>
+              {%- if section.settings.ambassador_url != blank -%}
+                <a class="gs-plain-btn" href="{{ section.settings.ambassador_url | escape }}" target="_blank" rel="noopener">Become an ambassador</a>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+        <div>
+          {%- if p != blank -%}
+            <a class="gs-piece" href="{{ p.url }}" data-gs-open="{{ block.id }}">
+              <span class="gs-ph">
+                {%- if p.featured_image != blank -%}
+                  {{ p.featured_image | image_url: width: 300 | image_tag: loading: 'lazy', alt: '' }}
+                {%- else -%}
+                  {{ tee_svg }}
+                {%- endif -%}
+              </span>
+              <span>
+                <h4>{{ piece_name | escape }}</h4>
+                <p>The piece from this moment</p>
+                <span class="gs-go">View piece</span>
+              </span>
+            </a>
+          {%- elsif piece_name != blank -%}
+            <div class="gs-piece" aria-disabled="true">
+              <span class="gs-ph">{{ tee_svg }}</span>
+              <span>
+                <h4>{{ piece_name | escape }}</h4>
+                <p>The piece from this moment</p>
+                <span class="gs-go">Coming soon</span>
+              </span>
+            </div>
+          {%- else -%}
+            <p class="gs-silence">{{ b.no_piece_text | escape }}</p>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- if p != blank -%}
+        <script type="application/json" id="gs-data-{{ block.id }}">
+          {
+            "name": {{ piece_name | json }},
+            "ref": {{ b.piece_ref | default: b.verse_ref | json }},
+            "note": {{ b.note | json }},
+            "url": {{ p.url | json }},
+            "image": {% if p.featured_image != blank %}{{ p.featured_image | image_url: width: 900 | json }}{% else %}null{% endif %},
+            "price": {{ p.price_min | money | strip_html | json }},
+            "priceVaries": {{ p.price_varies | json }},
+            "single": {{ p.has_only_default_variant | json }},
+            "options": {{ p.options | json }},
+            "variants": [
+              {%- for v in p.variants -%}
+                {"id": {{ v.id }}, "options": {{ v.options | json }}, "available": {{ v.available | json }}, "price": {{ v.price | money | strip_html | json }}}{% unless forloop.last %},{% endunless %}
+              {%- endfor -%}
+            ]
+          }
+        </script>
+      {%- endif -%}
+    </section>
+  {%- endfor -%}
+
+  <section class="gs-shop" id="{{ shop_id }}" aria-labelledby="gs-shop-title-{{ sid }}">
+    <h2 id="gs-shop-title-{{ sid }}">{{ section.settings.shop_title | escape }}</h2>
+    <p class="gs-sub">{{ section.settings.shop_sub | escape }}</p>
+    {%- if request.design_mode and has_products == false -%}
+      <p class="gs-editor-note">Editor note (shoppers never see this): click each stop on the left and choose its product. The shop grid fills in automatically.</p>
+    {%- endif -%}
+    <div class="gs-grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type != 'stop' -%}{%- continue -%}{%- endif -%}
+        {%- assign p = block.settings.product -%}
+        {%- if p == blank -%}{%- continue -%}{%- endif -%}
+        {%- assign piece_name = block.settings.piece_name | default: p.title -%}
+        <a class="gs-tile" href="{{ p.url }}" data-gs-open="{{ block.id }}">
+          <span class="gs-ph">
+            {%- if p.featured_image != blank -%}
+              {{ p.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300, 450, 600', sizes: '(min-width: 820px) 25vw, 50vw', alt: '' }}
+            {%- else -%}
+              {{ tee_svg | replace: 'width="64"', 'width="110"' }}
+            {%- endif -%}
+          </span>
+          <h4>{{ piece_name | escape }}</h4>
+          <p>{% if p.price_varies %}From {% endif %}{{ p.price_min | money }}</p>
+        </a>
+      {%- endfor -%}
+    </div>
+  </section>
+
+  {%- if section.settings.footer_note != blank -%}
+    <div class="gs-foot">{{ section.settings.footer_note }}</div>
+  {%- endif -%}
+
+  {%- if stop_count > 0 -%}
+    <nav class="gs-rail" aria-label="Journey through Matthew">
+      {%- for block in section.blocks -%}
+        {%- if block.type != 'stop' -%}{%- continue -%}{%- endif -%}
+        <a href="#gs-stop-{{ block.id }}" data-gs-jump="gs-stop-{{ block.id }}" data-gs-rail="gs-stop-{{ block.id }}" aria-label="{{ block.settings.place | escape }}"><span>{{ block.settings.place | escape }}</span></a>
+      {%- endfor -%}
+    </nav>
+  {%- endif -%}
+
+  <div class="gs-float">
+    <a href="#{{ shop_id }}" data-gs-jump="{{ shop_id }}" data-gs-skip>Skip to shop</a>
+    <a href="{{ routes.cart_url }}">Bag<span class="gs-count" data-gs-count>{{ cart.item_count }}</span></a>
+  </div>
+
+  <div class="gs-scrim" data-gs-scrim></div>
+  <div class="gs-sheet" data-gs-sheet role="dialog" aria-modal="true" aria-label="Piece details"></div>
+</div>
+
+<script>
+(function(){
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  var TEE='<svg viewBox="0 0 200 220" width="140" aria-hidden="true"><path d="M60 24 L84 14 Q100 30 116 14 L140 24 L186 54 L166 88 L148 78 L148 208 L52 208 L52 78 L34 88 L14 54 Z" fill="none" stroke="#6B5A48" stroke-width="2"/><path d="M84 14 Q100 32 116 14" fill="none" stroke="#6B5A48" stroke-width="2"/></svg>';
+
+  function init(root){
+    if(!root||root.getAttribute('data-gs-ready'))return;
+    root.setAttribute('data-gs-ready','1');
+    root.classList.add('gs-js');
+    var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var q=function(s,c){return (c||root).querySelector(s)};
+    var qa=function(s,c){return Array.prototype.slice.call((c||root).querySelectorAll(s))};
+    var sheet=q('[data-gs-sheet]'),scrim=q('[data-gs-scrim]');
+    var cartAdd=root.getAttribute('data-cart-add'),cartUrl=root.getAttribute('data-cart-url');
+    var lastFocus=null,state=null;
+
+    function go(id){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})}
+
+    root.addEventListener('click',function(e){
+      var t=e.target;
+      var nt=t.closest('[data-gs-nt]');
+      if(nt){var books=q('.gs-books');books.classList.add('show');nt.setAttribute('aria-expanded','true');nt.querySelector('span').textContent='Open';var m=books.querySelector('.gs-book.is-open');if(m)m.focus({preventScroll:true});return}
+      var o=t.closest('[data-gs-open]');
+      if(o&&!e.metaKey&&!e.ctrlKey&&!e.shiftKey){e.preventDefault();openSheet(o.getAttribute('data-gs-open'),o);return}
+      var j=t.closest('[data-gs-jump]');
+      if(j&&j.getAttribute('data-gs-jump')){e.preventDefault();go(j.getAttribute('data-gs-jump'));return}
+    });
+
+    /* reveal + progress rail */
+    var stops=qa('[data-gs-stop]'),rail=q('.gs-rail'),ratios={};
+    if('IntersectionObserver' in window&&stops.length){
+      var io=new IntersectionObserver(function(es){
+        es.forEach(function(en){ratios[en.target.id]=en.intersectionRatio;if(en.intersectionRatio>.2)en.target.classList.add('is-in')});
+        var best=null,max=0;for(var k in ratios){if(ratios[k]>max){max=ratios[k];best=k}}
+        if(rail){rail.classList.toggle('show',max>.35);qa('[data-gs-rail]',rail).forEach(function(a){a.setAttribute('aria-current',String(a.getAttribute('data-gs-rail')===best))})}
+      },{threshold:[0,.2,.35,.5,.75,1]});
+      stops.forEach(function(s){io.observe(s)});
+    }else{stops.forEach(function(s){s.classList.add('is-in')})}
+
+    /* product sheet */
+    function priceFor(){var v=match();return v?v.price:(state.d.priceVaries?'From '+state.d.price:state.d.price)}
+    function match(){
+      var d=state.d;
+      for(var i=0;i<d.variants.length;i++){var v=d.variants[i],ok=true;for(var n=0;n<d.options.length;n++){if(v.options[n]!==state.sel[n]){ok=false;break}}if(ok)return v}
+      return null;
+    }
+    function renderOpts(){
+      var d=state.d;if(d.single)return '';
+      return d.options.map(function(name,i){
+        var vals=[];d.variants.forEach(function(v){if(vals.indexOf(v.options[i])<0)vals.push(v.options[i])});
+        if(vals.length<2)return '';
+        return '<span class="gs-lbl">'+esc(name)+'</span><div class="gs-opts">'+vals.map(function(val){
+          var any=d.variants.some(function(v){return v.options[i]===val&&v.available});
+          return '<button type="button" class="gs-opt'+(any?'':' is-out')+'" data-i="'+i+'" data-v="'+esc(val)+'" aria-pressed="'+(state.sel[i]===val)+'">'+esc(val)+'</button>';
+        }).join('')+'</div>';
+      }).join('');
+    }
+    function openSheet(bid,trigger){
+      var el=document.getElementById('gs-data-'+bid);if(!el)return;
+      var d;try{d=JSON.parse(el.textContent)}catch(err){window.location=trigger.href;return}
+      state={d:d,sel:[]};
+      d.options.forEach(function(name,i){var vals=[];d.variants.forEach(function(v){if(vals.indexOf(v.options[i])<0)vals.push(v.options[i])});if(vals.length===1)state.sel[i]=vals[0]});
+      lastFocus=trigger;
+      sheet.innerHTML='<button type="button" class="gs-x" data-gs-close aria-label="Close">×</button>'+
+        '<div class="gs-sheet-grid"><div class="gs-ph">'+(d.image?'<img src="'+esc(d.image)+'" alt="">':TEE)+'</div><div>'+
+        (d.ref?'<p class="gs-s-ref">'+esc(d.ref)+'</p>':'')+
+        '<h2 class="gs-s-name">'+esc(d.name)+'</h2><p class="gs-s-price" data-gs-price>'+esc(priceFor())+'</p>'+
+        (d.note?'<p class="gs-s-note">'+esc(d.note)+'</p>':'')+
+        '<div data-gs-buy>'+renderOpts()+'<button type="button" class="gs-add" data-gs-add>Add to bag</button><p class="gs-hint" data-gs-hint aria-live="polite"></p></div>'+
+        '<a class="gs-details" href="'+esc(d.url)+'">View full details</a></div></div>';
+      sheet.setAttribute('aria-label',d.name);
+      sheet.classList.add('show');scrim.classList.add('show');
+      document.documentElement.style.overflow='hidden';
+      q('.gs-x',sheet).focus();
+    }
+    function closeSheet(){
+      if(!sheet.classList.contains('show'))return;
+      sheet.classList.remove('show');scrim.classList.remove('show');
+      document.documentElement.style.overflow='';
+      if(lastFocus&&lastFocus.focus)lastFocus.focus({preventScroll:true});
+      lastFocus=null;
+    }
+    function hint(m){var h=q('[data-gs-hint]',sheet);if(h)h.textContent=m}
+    function refreshCart(){
+      fetch(cartUrl+'.js',{headers:{Accept:'application/json'}}).then(function(r){return r.json()}).then(function(c){
+        qa('[data-gs-count]').forEach(function(n){n.textContent=c.item_count});
+      }).catch(function(){});
+      /* best effort: refresh the theme's own cart icon (works on Dawn-style themes, ignored elsewhere) */
+      var bubble=document.getElementById('cart-icon-bubble');
+      if(bubble){
+        fetch(window.location.pathname+'?sections=cart-icon-bubble').then(function(r){return r.ok?r.json():null}).then(function(j){
+          if(!j||!j['cart-icon-bubble'])return;
+          var tmp=document.createElement('div');tmp.innerHTML=j['cart-icon-bubble'];
+          var inner=tmp.querySelector('.shopify-section');bubble.innerHTML=(inner||tmp).innerHTML;
+        }).catch(function(){});
+      }
+    }
+    sheet.addEventListener('click',function(e){
+      if(e.target.closest('[data-gs-close]')){closeSheet();return}
+      var b=e.target.closest('.gs-opt');
+      if(b){var i=+b.getAttribute('data-i');state.sel[i]=b.getAttribute('data-v');
+        qa('.gs-opt[data-i="'+i+'"]',sheet).forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});
+        q('[data-gs-price]',sheet).textContent=priceFor();hint('');return}
+      var add=e.target.closest('[data-gs-add]');
+      if(add){
+        var d=state.d;
+        for(var n=0;n<d.options.length;n++){if(state.sel[n]==null){hint('Choose a '+d.options[n].toLowerCase()+' first.');return}}
+        var v=match();
+        if(!v||!v.available){hint('That one is sold out. Try another option.');return}
+        add.disabled=true;add.textContent='Adding…';
+        fetch(cartAdd+'.js',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({items:[{id:v.id,quantity:1}]})})
+          .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})})
+          .then(function(res){
+            if(!res.ok)throw new Error(res.j&&res.j.description||'Could not add to bag.');
+            q('[data-gs-buy]',sheet).innerHTML='<div class="gs-added"><p>Added to your bag.</p>'+
+              '<a class="gs-add" href="/checkout">Checkout</a>'+
+              '<a class="gs-plain-btn" href="'+esc(cartUrl)+'">View bag</a>'+
+              '<button type="button" class="gs-plain-btn" data-gs-close>Keep reading</button></div>';
+            refreshCart();
+          })
+          .catch(function(err){add.disabled=false;add.textContent='Add to bag';hint(err.message)});
+      }
+    });
+    scrim.addEventListener('click',closeSheet);
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheet()});
+  }
+
+  function boot(){Array.prototype.forEach.call(document.querySelectorAll('[data-gs-root]'),init)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+  document.addEventListener('shopify:section:load',boot);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Matthew Journey",
+  "tag": "div",
+  "class": "gs-matthew-journey-section",
+  "settings": [
+    { "type": "header", "content": "Opening (oil lamp)" },
+    { "type": "checkbox", "id": "show_opening", "label": "Show opening scene", "default": true },
+    { "type": "image_picker", "id": "lamp_image", "label": "Lamp scene image" },
+    { "type": "text", "id": "opening_title", "label": "Title", "default": "Gospelscribe" },
+    { "type": "text", "id": "opening_tagline", "label": "Tagline", "default": "Wear the Word" },
+    { "type": "text", "id": "opening_button", "label": "Button", "default": "Open the book" },
+    { "type": "text", "id": "opening_note", "label": "Small note", "default": "The Book of Matthew drop is here." },
+    { "type": "header", "content": "Testament gate" },
+    { "type": "checkbox", "id": "show_gate", "label": "Show Testament gate", "default": true },
+    { "type": "image_picker", "id": "gate_image", "label": "Gate scene image" },
+    { "type": "text", "id": "gate_title", "label": "Title", "default": "Where will you begin?" },
+    { "type": "text", "id": "gate_sub", "label": "Subtitle", "default": "Every drop is a book of the Bible." },
+    { "type": "header", "content": "Shop + ending" },
+    { "type": "text", "id": "shop_title", "label": "Shop title", "default": "The Book of Matthew" },
+    { "type": "text", "id": "shop_sub", "label": "Shop subtitle", "default": "Five pieces. Five moments. One story." },
+    { "type": "text", "id": "ambassador_url", "label": "Ambassador link", "default": "https://af.uppromote.com/Gospelscribe/register" },
+    { "type": "richtext", "id": "footer_note", "label": "Footer note", "default": "<p>Next to open: <strong>Mark</strong> · The Old Testament remains sealed</p>" }
+  ],
+  "blocks": [
+    {
+      "type": "stop",
+      "name": "Journey stop",
+      "settings": [
+        { "type": "text", "id": "place", "label": "Place", "default": "Bethlehem" },
+        { "type": "text", "id": "ref", "label": "Passage", "default": "Matthew 1:18 – 2:12" },
+        {
+          "type": "select", "id": "mood", "label": "Scene lighting (shows until an image is added)", "default": "bethlehem",
+          "options": [
+            { "value": "bethlehem", "label": "Bethlehem · midnight blue" },
+            { "value": "wilderness", "label": "Wilderness · scorched ochre" },
+            { "value": "galilee", "label": "Galilee · storm slate" },
+            { "value": "cross", "label": "Cross · ash + crimson" },
+            { "value": "tomb", "label": "Tomb · dawn rose-gold" },
+            { "value": "mountain", "label": "Mountain · sunrise amber" }
+          ]
+        },
+        { "type": "image_picker", "id": "image", "label": "Scene painting" },
+        { "type": "textarea", "id": "verse", "label": "Key verse (KJV)" },
+        { "type": "text", "id": "verse_ref", "label": "Verse reference", "default": "Matthew 1:23" },
+        { "type": "checkbox", "id": "red_letter", "label": "Red letter (words of Jesus)", "default": false },
+        { "type": "textarea", "id": "story", "label": "What happened here" },
+        { "type": "header", "content": "The piece" },
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "text", "id": "piece_name", "label": "Piece name", "info": "Leave blank to use the product title. If no product is picked yet, this shows as \"Coming soon\"." },
+        { "type": "text", "id": "piece_ref", "label": "Piece scripture label", "info": "Shown above the name in the product popup." },
+        { "type": "textarea", "id": "note", "label": "Study note", "info": "Shown in the product popup." },
+        { "type": "text", "id": "no_piece_text", "label": "Text when there's no piece", "default": "No piece here. Just the cross." },
+        { "type": "checkbox", "id": "show_commission", "label": "Show Great Commission buttons (last stop)", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Matthew Journey" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,136 @@
+{
+  "sections": {
+    "journey": {
+      "type": "gs-matthew-journey",
+      "blocks": {
+        "stop_bethlehem": {
+          "type": "stop",
+          "settings": {
+            "place": "Bethlehem",
+            "ref": "Matthew 1:18 – 2:12",
+            "mood": "bethlehem",
+            "verse": "They shall call his name Emmanuel, which being interpreted is, God with us.",
+            "verse_ref": "Matthew 1:23",
+            "red_letter": false,
+            "story": "Matthew tells the birth of Jesus Christ, from Joseph learning of Mary’s pregnancy to the arrival of the wise men. Jesus is introduced as Immanuel, God with us: the Savior arriving and the beginning of His earthly life.",
+            "piece_name": "A Savior Is Born",
+            "piece_ref": "Matthew 1–2",
+            "note": "This piece represents the arrival of the Savior and the beginning of the earthly life of Jesus. Inspired by Matthew 1:18–25 and 2:1–12.",
+            "no_piece_text": "No piece here. Just the cross.",
+            "show_commission": false
+          }
+        },
+        "stop_wilderness": {
+          "type": "stop",
+          "settings": {
+            "place": "The Wilderness",
+            "ref": "Matthew 4:1 – 11",
+            "mood": "wilderness",
+            "verse": "It is written, Man shall not live by bread alone, but by every word that proceedeth out of the mouth of God.",
+            "verse_ref": "Matthew 4:4",
+            "red_letter": true,
+            "story": "After fasting forty days and nights, Jesus is tempted by Satan. Each time, He answers with Scripture, beginning with the words “It is written.” The power of knowing God’s Word and standing on it when temptation comes.",
+            "piece_name": "It Is Written",
+            "piece_ref": "Matthew 4:1–11",
+            "note": "This piece represents the power of knowing God’s Word and standing on Scripture when temptation comes. Inspired by Matthew 4:1–11, especially 4:4.",
+            "no_piece_text": "No piece here. Just the cross.",
+            "show_commission": false
+          }
+        },
+        "stop_galilee": {
+          "type": "stop",
+          "settings": {
+            "place": "The Sea of Galilee",
+            "ref": "Matthew 14:22 – 33",
+            "mood": "galilee",
+            "verse": "But when he saw the wind boisterous, he was afraid; and beginning to sink, he cried, saying, Lord, save me.",
+            "verse_ref": "Matthew 14:30",
+            "red_letter": false,
+            "story": "Peter steps out of the boat and walks toward Jesus on the water. When fear of the wind and waves takes over, he begins to sink and cries out. Jesus immediately reaches out His hand and saves him. Even when faith is shaken, we can still call on Jesus.",
+            "piece_name": "Lord, Save Me",
+            "piece_ref": "Matthew 14:30",
+            "note": "A reminder that even when our faith becomes shaken and fear takes over, we can still call on Jesus. Inspired by Matthew 14:30.",
+            "no_piece_text": "No piece here. Just the cross.",
+            "show_commission": false
+          }
+        },
+        "stop_cross": {
+          "type": "stop",
+          "settings": {
+            "place": "Golgotha",
+            "ref": "Matthew 27",
+            "mood": "cross",
+            "verse": "Eli, Eli, lama sabachthani? that is to say, My God, my God, why hast thou forsaken me?",
+            "verse_ref": "Matthew 27:46",
+            "red_letter": true,
+            "story": "Jesus is crucified outside Jerusalem. Darkness covers the land, and He gives up His life for the sins of the world.",
+            "piece_name": "",
+            "piece_ref": "",
+            "note": "",
+            "no_piece_text": "No piece here. Just the cross.",
+            "show_commission": false
+          }
+        },
+        "stop_tomb": {
+          "type": "stop",
+          "settings": {
+            "place": "The Empty Tomb",
+            "ref": "Matthew 28:1 – 10",
+            "mood": "tomb",
+            "verse": "He is not here: for he is risen, as he said.",
+            "verse_ref": "Matthew 28:6",
+            "red_letter": false,
+            "story": "Mary Magdalene and the other Mary come to the tomb and find it empty. An angel tells them Jesus has risen, just as He said He would. The resurrection: the empty tomb and the victory over death.",
+            "piece_name": "He Is Not Here / He Has Risen",
+            "piece_ref": "Matthew 28:1–10",
+            "note": "This piece represents the resurrection of Jesus Christ: the empty tomb and the victory over death. Inspired by Matthew 28:1–10.",
+            "no_piece_text": "No piece here. Just the cross.",
+            "show_commission": false
+          }
+        },
+        "stop_mountain": {
+          "type": "stop",
+          "settings": {
+            "place": "The Mountain in Galilee",
+            "ref": "Matthew 28:16 – 20",
+            "mood": "mountain",
+            "verse": "Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost.",
+            "verse_ref": "Matthew 28:19",
+            "red_letter": true,
+            "story": "After His resurrection, Jesus meets His disciples and gives the Great Commission. They are called to baptize, teach, and carry His message into the world. Take what you have learned from Scripture and share it.",
+            "piece_name": "Go and Make Disciples",
+            "piece_ref": "Matthew 28:16–20",
+            "note": "This piece represents the mission to take what we’ve learned from Scripture and share it with others. Inspired by Matthew 28:16–20.",
+            "no_piece_text": "No piece here. Just the cross.",
+            "show_commission": true
+          }
+        }
+      },
+      "block_order": [
+        "stop_bethlehem",
+        "stop_wilderness",
+        "stop_galilee",
+        "stop_cross",
+        "stop_tomb",
+        "stop_mountain"
+      ],
+      "settings": {
+        "show_opening": true,
+        "opening_title": "Gospelscribe",
+        "opening_tagline": "Wear the Word",
+        "opening_button": "Open the book",
+        "opening_note": "The Book of Matthew drop is here.",
+        "show_gate": true,
+        "gate_title": "Where will you begin?",
+        "gate_sub": "Every drop is a book of the Bible.",
+        "shop_title": "The Book of Matthew",
+        "shop_sub": "Five pieces. Five moments. One story.",
+        "ambassador_url": "https://af.uppromote.com/Gospelscribe/register",
+        "footer_note": "<p>Next to open: <strong>Mark</strong> · The Old Testament remains sealed</p>"
+      }
+    }
+  },
+  "order": [
+    "journey"
+  ]
+}
