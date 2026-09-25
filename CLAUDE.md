@@ -87,7 +87,7 @@ Build the full custom Gospelscribe theme (opening, Testament gate, books, journe
   - Working copy: **"Clean Slate + Matthew Journey"** (id 153989251141, unpublished) holds both files. Upload method: `themeFilesUpsert` with body type URL pointing at the raw GitHub file at a pinned commit (repo is public), then verify `checksumMd5` matches local.
   - Bryant's other unpublished themes ("Clean slate REMAKE MATTHEW", "Horizon") are his. Leave them alone.
   - The 8 Higgsfield paintings were imported into Shopify Files as `gs-matthew-<scene>.png` (1344×752, standard quality) and referenced in the template as `shopify://shop_images/gs-matthew-<scene>.png`. Swap in hi-res re-renders later using the same filenames (fileCreate with duplicateResolutionMode REPLACE).
-  - Page "The Book of Matthew" (/pages/book-of-matthew, id 122870792261) was created **hidden**, using template suffix `matthew`.
+  - Page "The Book of Matthew" (/pages/book-of-matthew, id 122870792261) was created hidden, then made **visible** Sept 25 (a hidden page 404s even in theme preview). Template suffix `matthew`.
 - **Home page = the journey** (Bryant's call, Sept 25): the copy's `templates/index.json` has `matthew_journey` first, and all his original home sections follow in the same order, unchanged. The copy's header has `transparent_on_home: true`, so the logo floats over the lamp scene on home. `theme/templates/index.json` in the repo is a snapshot. If Bryant edits home in the editor, Shopify's copy is the truth, so re-read it before overwriting.
 - Checksum trick: Shopify stores JSON templates exactly as uploaded. When it has normalized a file, its md5 matches compact JSON with `/` escaped as `\/` (no comment header).
 - The connector cannot publish themes or write to the live theme. Bryant clicks Publish himself.
@@ -100,7 +100,7 @@ Build the full custom Gospelscribe theme (opening, Testament gate, books, journe
   - Mountain: `go-and-make-disciples-hoodie`
 - **Launch day checklist**:
   1. Bryant publishes "Clean Slate + Matthew Journey" (Themes → Publish).
-  2. Make the page visible (pageUpdate isPublished true).
+  2. ~~Make the page visible~~: done Sept 25 at Bryant's request (the preview 404ed while it was hidden). Its body reads "opens soon…"; only the live Clean Slate theme shows that body, the journey template ignores it.
   3. Products set to Active if they're still Unlisted.
   4. Add "The Book of Matthew" to the main menu.
   - Before publishing, check whether the live theme changed since Sept 25. If it did, those changes need copying to the working copy first.
