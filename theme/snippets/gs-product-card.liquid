@@ -1,0 +1,31 @@
+{%- comment -%}
+  Gospelscribe product card.
+  Usage: {% render 'gs-product-card', product: product, sizes: '(min-width: 750px) 25vw, 50vw' %}
+{%- endcomment -%}
+{%- liquid
+  assign sizes = sizes | default: '(min-width: 750px) 25vw, 50vw'
+  assign second = product.images[1]
+-%}
+<a class="gs-card" href="{{ product.url }}">
+  <div class="gs-card__media">
+    {%- if product.featured_image != blank -%}
+      {{ product.featured_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: sizes, alt: product.featured_image.alt | default: product.title }}
+      {%- if second != blank -%}
+        {{ second | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: sizes, alt: '' }}
+      {%- endif -%}
+    {%- else -%}
+      <div class="gs-placeholder">Gospelscribe</div>
+    {%- endif -%}
+    {%- unless product.available -%}
+      <span class="gs-card__badge">Sold out</span>
+    {%- else -%}
+      {%- if product.compare_at_price > product.price -%}<span class="gs-card__badge">Sale</span>{%- endif -%}
+    {%- endunless -%}
+  </div>
+  <p class="gs-card__title">{{ product.title | escape }}</p>
+  <p class="gs-card__price">
+    {%- if product.price_varies -%}From {% endif -%}
+    {{ product.price | money }}
+    {%- if product.compare_at_price > product.price -%}<s>{{ product.compare_at_price | money }}</s>{%- endif -%}
+  </p>
+</a>

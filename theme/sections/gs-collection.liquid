@@ -1,0 +1,64 @@
+{%- liquid
+  assign c = section.settings.collection
+  assign bg = section.settings.background
+-%}
+<section class="gs gs-section gs-bg-{{ bg }}">
+  <div class="gs-wrap">
+    {%- if section.settings.heading != blank or section.settings.eyebrow != blank -%}
+      <div class="gs-head gs-head--{{ section.settings.align }}">
+        <div>
+          {%- if section.settings.eyebrow != blank -%}<p class="gs-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+          {%- if section.settings.heading != blank -%}<h2 class="gs-title">{{ section.settings.heading | escape }}</h2>{%- endif -%}
+          {%- if section.settings.subheading != blank -%}<p class="gs-sub">{{ section.settings.subheading | escape }}</p>{%- endif -%}
+        </div>
+        {%- if section.settings.align == 'row' and section.settings.show_view_all and c != blank -%}
+          <a class="gs-link" href="{{ c.url }}">{{ section.settings.view_all_label | escape }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="gs-grid" style="--gs-cols-d: {{ section.settings.cols_desktop }}; --gs-cols-m: {{ section.settings.cols_mobile }}">
+      {%- if c != blank and c.products_count > 0 -%}
+        {%- for product in c.products limit: section.settings.limit -%}
+          {%- render 'gs-product-card', product: product -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          <div class="gs-card"><div class="gs-card__media"><div class="gs-placeholder">Pick a collection</div></div><p class="gs-card__title">Product name</p><p class="gs-card__price">$00.00</p></div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.align != 'row' and section.settings.show_view_all and c != blank -%}
+      <div style="text-align:center;margin-top:36px"><a class="gs-btn" href="{{ c.url }}">{{ section.settings.view_all_label | escape }}</a></div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "GS Collection",
+  "class": "gs-collection-section",
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "text", "id": "eyebrow", "label": "Small label" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Best Sellers" },
+    { "type": "text", "id": "subheading", "label": "Subheading" },
+    { "type": "select", "id": "align", "label": "Heading layout", "default": "center", "options": [
+      { "value": "center", "label": "Centered" },
+      { "value": "row", "label": "Left, with link on the right" }
+    ] },
+    { "type": "range", "id": "limit", "label": "Products to show", "min": 2, "max": 24, "step": 1, "default": 8 },
+    { "type": "range", "id": "cols_desktop", "label": "Columns on desktop", "min": 2, "max": 5, "step": 1, "default": 4 },
+    { "type": "range", "id": "cols_mobile", "label": "Columns on phones", "min": 1, "max": 2, "step": 1, "default": 2 },
+    { "type": "checkbox", "id": "show_view_all", "label": "Show \"View all\" button", "default": true },
+    { "type": "text", "id": "view_all_label", "label": "\"View all\" text", "default": "View all" },
+    { "type": "select", "id": "background", "label": "Background", "default": "umber", "options": [
+      { "value": "umber", "label": "Umber (dark)" },
+      { "value": "umber-2", "label": "Umber, lighter" },
+      { "value": "parch", "label": "Parchment (light)" }
+    ] }
+  ],
+  "presets": [ { "name": "GS Collection" } ]
+}
+{% endschema %}

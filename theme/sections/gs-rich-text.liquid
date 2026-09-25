@@ -1,0 +1,62 @@
+<section class="gs gs-section gs-bg-{{ section.settings.background }}">
+  <div class="gs-wrap" style="max-width:{{ section.settings.width }}px;text-align:{{ section.settings.align }}">
+    {%- for block in section.blocks -%}
+      <div {{ block.shopify_attributes }} style="margin-top:{% if forloop.first %}0{% else %}18px{% endif %}">
+        {%- case block.type -%}
+          {%- when 'eyebrow' -%}
+            <p class="gs-eyebrow">{{ block.settings.text | escape }}</p>
+          {%- when 'heading' -%}
+            <h2 class="gs-title{% if block.settings.size == 'xl' %} gs-title--xl{% endif %}">{{ block.settings.text | escape }}</h2>
+          {%- when 'text' -%}
+            <div class="gs-rte" style="font-size:1.12rem;line-height:1.75">{{ block.settings.text }}</div>
+          {%- when 'verse' -%}
+            <blockquote style="margin:0">
+              <p style="font-family:var(--gs-display);font-style:italic;font-size:clamp(1.3rem,3vw,1.75rem);line-height:1.45;{% if block.settings.red_letter %}color:var(--gs-red-letter){% endif %}">{{ block.settings.verse | escape }}</p>
+              {%- if block.settings.reference != blank -%}<cite style="display:block;margin-top:8px;font-style:normal;font-family:var(--gs-caps);letter-spacing:.08em;color:var(--gs-parch-dim)">{{ block.settings.reference | escape }}</cite>{%- endif -%}
+            </blockquote>
+          {%- when 'button' -%}
+            {%- if block.settings.label != blank -%}
+              <a class="gs-btn{% if block.settings.style == 'red' %} gs-btn--red{% elsif block.settings.style == 'plain' %} gs-btn--plain{% endif %}" href="{{ block.settings.link | default: '#' }}">{{ block.settings.label | escape }}</a>
+            {%- endif -%}
+        {%- endcase -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "GS Rich text",
+  "class": "gs-rich-text-section",
+  "settings": [
+    { "type": "select", "id": "align", "label": "Alignment", "default": "center", "options": [
+      { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }
+    ] },
+    { "type": "range", "id": "width", "label": "Max width", "min": 500, "max": 1200, "step": 50, "unit": "px", "default": 800 },
+    { "type": "select", "id": "background", "label": "Background", "default": "umber", "options": [
+      { "value": "umber", "label": "Umber (dark)" },
+      { "value": "umber-2", "label": "Umber, lighter" },
+      { "value": "parch", "label": "Parchment (light)" }
+    ] }
+  ],
+  "blocks": [
+    { "type": "eyebrow", "name": "Small label", "settings": [ { "type": "text", "id": "text", "label": "Text", "default": "Gospelscribe" } ] },
+    { "type": "heading", "name": "Heading", "settings": [
+      { "type": "text", "id": "text", "label": "Heading", "default": "Teaching Scripture through clothing" },
+      { "type": "select", "id": "size", "label": "Size", "default": "l", "options": [ { "value": "l", "label": "Large" }, { "value": "xl", "label": "Extra large" } ] }
+    ] },
+    { "type": "text", "name": "Text", "settings": [ { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Every drop is built on a book of the Bible.</p>" } ] },
+    { "type": "verse", "name": "Scripture verse", "settings": [
+      { "type": "textarea", "id": "verse", "label": "Verse (KJV)", "default": "Thy word is a lamp unto my feet, and a light unto my path." },
+      { "type": "text", "id": "reference", "label": "Reference", "default": "Psalm 119:105" },
+      { "type": "checkbox", "id": "red_letter", "label": "Red letter (words of Jesus)", "default": false }
+    ] },
+    { "type": "button", "name": "Button", "settings": [
+      { "type": "text", "id": "label", "label": "Label", "default": "Shop now" },
+      { "type": "url", "id": "link", "label": "Link" },
+      { "type": "select", "id": "style", "label": "Style", "default": "gold", "options": [ { "value": "gold", "label": "Gold outline" }, { "value": "red", "label": "Crimson" }, { "value": "plain", "label": "Plain" } ] }
+    ] }
+  ],
+  "presets": [ { "name": "GS Rich text", "blocks": [ { "type": "eyebrow" }, { "type": "heading" }, { "type": "text" }, { "type": "button" } ] } ]
+}
+{% endschema %}

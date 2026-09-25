@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    {% # Inlined CSS Variables & custom @font-face declarations %}
+    {% render 'css-variables' %}
+
+    {% comment %}
+      Font preloading:
+      - Preconnect to Shopify font CDN only when at least one Shopify picker font is active
+      - Custom fonts are self-hosted via Content > Files and loaded via @font-face in css-variables
+    {% endcomment %}
+    {%- assign uses_shopify_font = false -%}
+    {%- unless settings.type_heading_font_custom_enable -%}{%- assign uses_shopify_font = true -%}{%- endunless -%}
+    {%- unless settings.type_subheading_font_custom_enable -%}{%- assign uses_shopify_font = true -%}{%- endunless -%}
+    {%- unless settings.type_body_font_custom_enable -%}{%- assign uses_shopify_font = true -%}{%- endunless -%}
+    {%- unless settings.type_nav_font_custom_enable -%}{%- assign uses_shopify_font = true -%}{%- endunless -%}
+    {%- unless settings.type_button_font_custom_enable -%}{%- assign uses_shopify_font = true -%}{%- endunless -%}
+    {%- unless settings.type_label_font_custom_enable -%}{%- assign uses_shopify_font = true -%}{%- endunless -%}
+    {%- unless settings.type_price_font_custom_enable -%}{%- assign uses_shopify_font = true -%}{%- endunless -%}
+    {%- unless settings.type_quote_font_custom_enable -%}{%- assign uses_shopify_font = true -%}{%- endunless -%}
+
+    {% if uses_shopify_font %}
+      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    {% endif %}
+
+    {% unless settings.type_heading_font_custom_enable %}{% assign _heading_url = settings.type_heading_font | font_url %}{% if _heading_url != blank %}
+      {{ _heading_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+    {% endif %}{% endunless %}
+    {% unless settings.type_subheading_font_custom_enable %}{% assign _subheading_url = settings.type_subheading_font | font_url %}{% if _subheading_url != blank %}
+      {{ _subheading_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+    {% endif %}{% endunless %}
+    {% unless settings.type_body_font_custom_enable %}{% assign _body_url = settings.type_body_font | font_url %}{% if _body_url != blank %}
+      {{ _body_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+    {% endif %}{% endunless %}
+    {% unless settings.type_nav_font_custom_enable %}{% assign _nav_url = settings.type_nav_font | font_url %}{% if _nav_url != blank %}
+      {{ _nav_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+    {% endif %}{% endunless %}
+    {% unless settings.type_button_font_custom_enable %}{% assign _button_url = settings.type_button_font | font_url %}{% if _button_url != blank %}
+      {{ _button_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+    {% endif %}{% endunless %}
+    {% unless settings.type_label_font_custom_enable %}{% assign _label_url = settings.type_label_font | font_url %}{% if _label_url != blank %}
+      {{ _label_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+    {% endif %}{% endunless %}
+    {% unless settings.type_price_font_custom_enable %}{% assign _price_url = settings.type_price_font | font_url %}{% if _price_url != blank %}
+      {{ _price_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+    {% endif %}{% endunless %}
+    {% unless settings.type_quote_font_custom_enable %}{% assign _quote_url = settings.type_quote_font | font_url %}{% if _quote_url != blank %}
+      {{ _quote_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
+    {% endif %}{% endunless %}
+
+    {% # Load and preload the critical CSS %}
+    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+
+    {% # Social, title, etc. %}
+    {%- if settings.favicon -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 64 }}">
+    <link rel="shortcut icon" type="image/png" href="{{ settings.favicon | image_url: width: 64 }}">
+  {%- endif -%}
+  {% render 'meta-tags' %}
+
+    {% render 'gs-head' %}
+    {{ content_for_header }}
+  </head>
+
+  <body>
+    {% render 'theme-core' %}
+    {% render 'cart-protection' %}
+    {%- comment -%} Gospelscribe: Clean Slate's announcement bar, countdown, search drawer, landing page,
+      newsletter popup, music player and loading screen were removed. The header and footer groups now hold gs-* sections. {%- endcomment -%}
+    {% sections 'header-group' %}
+
+    <main id="MainContent" role="main">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {%- if settings.scroll_to_top_enable -%}
+    <button
+      id="scroll-to-top"
+      aria-label="Scroll to top"
+      style="
+        position: fixed;
+        {{ settings.scroll_to_top_position | split: '-' | last }}: 24px;
+        bottom: 24px;
+        width: {{ settings.scroll_to_top_size | default: 44 }}px;
+        height: {{ settings.scroll_to_top_size | default: 44 }}px;
+        background: {{ settings.scroll_to_top_bg | default: '#111111' }};
+        color: {{ settings.scroll_to_top_color | default: '#ffffff' }};
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      ">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+    <script>
+    (function() {
+      var btn = document.getElementById('scroll-to-top');
+      if (!btn) return;
+      window.addEventListener('scroll', function() {
+        var show = window.scrollY > 400;
+        btn.style.opacity = show ? '1' : '0';
+        btn.style.pointerEvents = show ? 'auto' : 'none';
+      }, { passive: true });
+      btn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+    </script>
+    {%- endif -%}
+
+    <style>
+    *:focus-visible {
+      outline: {{ settings.focus_ring_width | default: 2 }}px solid {{ settings.focus_ring_color | default: '#111111' }};
+      outline-offset: {{ settings.focus_ring_offset | default: 2 }}px;
+    }
+    </style>
+
+    {%- if settings.custom_css != blank -%}
+    <style>{{ settings.custom_css }}</style>
+    {%- endif -%}
+
+  {% render 'media-loader' %}
+
+
+{%- if settings.notification_style == 'panel' -%}
+  <div id="cart-notif-panel" aria-live="polite" aria-atomic="true" style="
+    --cnp-width: {{ settings.panel_width | default: 360 }}px;
+    --cnp-bg: {{ settings.panel_bg | default: '#ffffff' }};
+    --cnp-color: {{ settings.panel_text_color | default: '#111111' }};
+    --cnp-border: {{ settings.panel_border_color | default: '#e5e5e5' }};
+    --cnp-radius: {{ settings.panel_radius | default: 0 }}px;
+    --cnp-checkout-bg: {{ settings.panel_checkout_bg | default: '#111111' }};
+    --cnp-checkout-color: {{ settings.panel_checkout_color | default: '#ffffff' }};
+    --cnp-offset: {{ settings.toast_offset | default: 120 }}px;
+    --cnp-title-family: var(--font-{{ settings.panel_title_style | default: 'body' }}--family);
+    --cnp-title-weight: var(--font-{{ settings.panel_title_style | default: 'body' }}--weight);
+    --cnp-title-size: {{ settings.panel_title_size | default: 13 }}px;
+    --cnp-title-size-m: {{ settings.panel_title_size_mobile | default: 13 }}px;
+    --cnp-variant-family: var(--font-{{ settings.panel_variant_style | default: 'body' }}--family);
+    --cnp-variant-weight: var(--font-{{ settings.panel_variant_style | default: 'body' }}--weight);
+    --cnp-variant-size: {{ settings.panel_variant_size | default: 12 }}px;
+    --cnp-variant-size-m: {{ settings.panel_variant_size_mobile | default: 12 }}px;
+    --cnp-price-family: var(--font-{{ settings.panel_price_style | default: 'price' }}--family);
+    --cnp-price-weight: var(--font-{{ settings.panel_price_style | default: 'price' }}--weight);
+    --cnp-price-size: {{ settings.panel_price_size | default: 13 }}px;
+    --cnp-price-size-m: {{ settings.panel_price_size_mobile | default: 13 }}px;
+    --cnp-btn-family: var(--font-{{ settings.panel_btn_style | default: 'button' }}--family);
+    --cnp-btn-weight: var(--font-{{ settings.panel_btn_style | default: 'button' }}--weight);
+    --cnp-btn-size: {{ settings.panel_btn_size | default: 11 }}px;
+    --cnp-btn-size-m: {{ settings.panel_btn_size_mobile | default: 11 }}px;
+  ">
+    <button class="cnp-close" id="cnp-close" aria-label="Close notification">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg>
+    </button>
+    <div class="cnp-body">
+      <div class="cnp-img-wrap">
+        <img id="cnp-img" class="cnp-img" src="" alt="" loading="lazy" style="color:transparent;font-size:0;">
+      </div>
+      <div class="cnp-info">
+        <p class="cnp-added">Added to cart</p>
+        <p class="cnp-title" id="cnp-title"></p>
+        <p class="cnp-variant" id="cnp-variant"></p>
+        <p class="cnp-price" id="cnp-price"></p>
+      </div>
+    </div>
+    <div class="cnp-actions">
+      <a href="/cart" class="cnp-btn cnp-btn--secondary">View cart</a>
+      <a href="/checkout" class="cnp-btn cnp-btn--primary">Checkout</a>
+    </div>
+  </div>
+
+  <style>
+    #cart-notif-panel {
+      position: fixed;
+      top: var(--cnp-offset, 120px);
+      right: 20px;
+      width: var(--cnp-width, 360px);
+      max-width: calc(100vw - 32px);
+      background: var(--cnp-bg, #fff);
+      color: var(--cnp-color, #111);
+      border: 1px solid var(--cnp-border, #e5e5e5);
+      border-radius: var(--cnp-radius, 0px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      z-index: 99999;
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+      transition: opacity 0.12s ease, transform 0.12s ease;
+      font-family: var(--font-body--family);
+    }
+    #cart-notif-panel.cnp-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .cnp-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--cnp-color, #111);
+      padding: 4px;
+      opacity: 0.5;
+      line-height: 0;
+    }
+    .cnp-close:hover { opacity: 1; }
+    .cnp-body {
+      display: flex;
+      gap: 14px;
+      padding: 16px 16px 12px;
+      align-items: flex-start;
+    }
+    .cnp-img-wrap {
+      flex-shrink: 0;
+      width: 72px;
+      height: 88px;
+      overflow: hidden;
+      background: #f5f5f5;
+    }
+    .cnp-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .cnp-info {
+      flex: 1;
+      min-width: 0;
+      padding-right: 20px;
+    }
+    .cnp-added {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.5;
+      margin: 0 0 6px;
+    }
+    .cnp-title {
+      font-family: var(--cnp-title-family, inherit);
+      font-weight: var(--cnp-title-weight, 500);
+      font-size: var(--cnp-title-size, 13px);
+      margin: 0 0 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cnp-variant {
+      font-family: var(--cnp-variant-family, inherit);
+      font-weight: var(--cnp-variant-weight, inherit);
+      font-size: var(--cnp-variant-size, 12px);
+      opacity: 0.6;
+      margin: 0 0 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cnp-price {
+      font-family: var(--cnp-price-family, inherit);
+      font-weight: var(--cnp-price-weight, 500);
+      font-size: var(--cnp-price-size, 13px);
+      margin: 0;
+    }
+    .cnp-actions {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px 16px;
+    }
+    .cnp-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 8px;
+      font-size: var(--cnp-btn-size, 11px);
+      font-family: var(--cnp-btn-family, inherit);
+      font-weight: var(--cnp-btn-weight, inherit);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid var(--cnp-border, #e5e5e5);
+      border-radius: var(--cnp-radius, 0px);
+      transition: opacity 0.15s;
+      line-height: 1;
+    }
+    .cnp-btn:hover { opacity: 0.8; }
+    .cnp-btn--secondary {
+      background: transparent;
+      color: var(--cnp-color, #111);
+    }
+    .cnp-btn--primary {
+      background: var(--cnp-checkout-bg, #111);
+      color: var(--cnp-checkout-color, #fff);
+      border-color: var(--cnp-checkout-bg, #111);
+    }
+
+    @media screen and (max-width: 1199px) {
+      .cnp-title   { font-size: var(--cnp-title-size-m, 13px); }
+      .cnp-variant { font-size: var(--cnp-variant-size-m, 12px); }
+      .cnp-price   { font-size: var(--cnp-price-size-m, 13px); }
+      .cnp-btn     { font-size: var(--cnp-btn-size-m, 11px); }
+    }
+  </style>
+
+  <script>
+  (function() {
+    var panel     = document.getElementById('cart-notif-panel');
+    var closeBtn  = document.getElementById('cnp-close');
+    var imgEl     = document.getElementById('cnp-img');
+    var titleEl   = document.getElementById('cnp-title');
+    var variantEl = document.getElementById('cnp-variant');
+    var priceEl   = document.getElementById('cnp-price');
+    if (!panel) return;
+    var timer;
+    function fmt(cents) {
+      return (cents / 100).toLocaleString('{{ shop.locale }}', {
+        style: 'currency', currency: '{{ shop.currency }}'
+      });
+    }
+    function show(item) {
+      clearTimeout(timer);
+      if (item.featured_image && item.featured_image.url) {
+        imgEl.src = item.featured_image.url;
+        imgEl.alt = item.featured_image.alt || item.product_title;
+        imgEl.parentElement.style.display = '';
+      } else {
+        imgEl.src = '';
+        imgEl.parentElement.style.display = 'none';
+      }
+      titleEl.textContent   = item.product_title || '';
+      variantEl.textContent = (item.variant_title && item.variant_title !== 'Default Title') ? item.variant_title : '';
+      priceEl.textContent   = fmt(item.final_price);
+      panel.classList.add('cnp-visible');
+      timer = setTimeout(hide, 5000);
+    }
+    function hide() {
+      clearTimeout(timer);
+      panel.classList.remove('cnp-visible');
+    }
+    closeBtn.addEventListener('click', hide);
+    document.addEventListener('cart:item-added', function(e) {
+      if (e.detail && e.detail.item) show(e.detail.item);
+    });
+  })();
+  </script>
+  {%- endif -%}
+
+  </body>
+</html>

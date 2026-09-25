@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "journey": {
@@ -127,11 +136,11 @@
       ],
       "settings": {
         "show_opening": true,
-        "opening_title": "Gospelscribe",
-        "opening_tagline": "Wear the Word",
-        "opening_button": "Open the book",
-        "opening_note": "The Book of Matthew drop is here.",
-        "show_gate": true,
+        "opening_title": "The Book of Matthew",
+        "opening_tagline": "Walk with Jesus, from Bethlehem to the mountain",
+        "opening_button": "Begin the journey",
+        "opening_note": "Five pieces. Five moments. One story.",
+        "show_gate": false,
         "gate_title": "Where will you begin?",
         "gate_sub": "Every drop is a book of the Bible.",
         "shop_title": "The Book of Matthew",

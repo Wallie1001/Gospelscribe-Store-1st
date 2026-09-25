@@ -1,0 +1,231 @@
+{%- liquid
+  assign menu = section.settings.menu
+  assign logo = section.settings.logo
+-%}
+<style>
+  {%- if section.settings.sticky -%}
+  #shopify-section-{{ section.id }}{position:sticky;top:0;z-index:40}
+  {%- endif -%}
+  .gs-hdr{background:rgba(21,17,14,.96);border-bottom:1px solid var(--gs-line);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .gs-hdr__row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;min-height:64px;gap:8px}
+  .gs-hdr__left,.gs-hdr__right{display:flex;align-items:center;gap:2px}
+  .gs-hdr__right{justify-content:flex-end}
+  .gs-hdr__logo{display:block;text-decoration:none;text-align:center}
+  .gs-hdr__logo img{height:{{ section.settings.logo_h_mobile }}px;width:auto;margin:0 auto}
+  .gs-hdr__word{font-family:var(--gs-display);font-size:1.6rem;color:var(--gs-parch);letter-spacing:.01em}
+  .gs-icon-btn{display:inline-grid;place-items:center;position:relative;width:44px;height:44px;background:none;border:0;color:var(--gs-parch);text-decoration:none;padding:0}
+  .gs-icon-btn:hover{color:var(--gs-gold-hi)}
+  .gs-icon-btn svg{width:22px;height:22px}
+  .gs-hdr__count{position:absolute;top:5px;right:3px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--gs-crimson);color:#fff;font-family:var(--gs-body);font-size:.68rem;line-height:17px;text-align:center}
+  .gs-hdr__count[data-count="0"]{display:none}
+  .gs-hdr__nav{display:none}
+  @media (min-width:990px){
+    .gs-hdr__row{grid-template-columns:auto 1fr auto;min-height:76px}
+    .gs-hdr__logo{text-align:left}
+    .gs-hdr__logo img{height:{{ section.settings.logo_h_desktop }}px;margin:0}
+    .gs-hdr__menu-btn{display:none!important}
+    .gs-hdr__nav{display:flex;justify-content:center;gap:4px;list-style:none;margin:0;padding:0}
+    .gs-hdr__nav>li{position:relative}
+    .gs-hdr__nav a{display:block;padding:10px 14px;font-family:var(--gs-caps);font-size:1.02rem;letter-spacing:.08em;color:var(--gs-parch);text-decoration:none}
+    .gs-hdr__nav a:hover,.gs-hdr__nav a[aria-current="page"]{color:var(--gs-gold-hi)}
+    .gs-hdr__nav ul{position:absolute;left:0;top:100%;min-width:220px;list-style:none;margin:0;padding:8px 0;background:var(--gs-umber-2);border:1px solid var(--gs-line);opacity:0;visibility:hidden;transform:translateY(4px);transition:.18s}
+    .gs-hdr__nav li:hover>ul,.gs-hdr__nav li:focus-within>ul{opacity:1;visibility:visible;transform:none}
+  }
+  /* search bar */
+  .gs-hdr__search{border-top:1px solid var(--gs-line);padding:12px 0}
+  .gs-hdr__search form{display:flex;gap:8px}
+  /* drawer */
+  .gs-drawer{position:fixed;inset:0;z-index:2147482000;visibility:hidden}
+  .gs-drawer.is-open{visibility:visible}
+  .gs-drawer__scrim{position:absolute;inset:0;background:rgba(0,0,0,.6);opacity:0;transition:opacity .25s}
+  .gs-drawer.is-open .gs-drawer__scrim{opacity:1}
+  .gs-drawer__panel{position:absolute;top:0;left:0;bottom:0;width:min(380px,88vw);background:var(--gs-umber);border-right:1px solid var(--gs-gold);transform:translateX(-102%);transition:transform .3s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;padding:14px 22px calc(22px + env(safe-area-inset-bottom,0px));overflow-y:auto}
+  .gs-drawer.is-open .gs-drawer__panel{transform:none}
+  .gs-drawer__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .gs-drawer__top span{font-family:var(--gs-display);font-size:1.5rem}
+  .gs-drawer ul{list-style:none;margin:0;padding:0}
+  .gs-drawer__links>li{border-bottom:1px solid rgba(201,162,77,.16)}
+  .gs-drawer__links a,.gs-drawer__links summary{display:flex;justify-content:space-between;align-items:center;padding:15px 0;font-family:var(--gs-display);font-size:1.45rem;color:var(--gs-parch);text-decoration:none;cursor:pointer;list-style:none}
+  .gs-drawer__links summary::-webkit-details-marker{display:none}
+  .gs-drawer__links summary::after{content:"+";font-family:var(--gs-body);color:var(--gs-gold)}
+  .gs-drawer__links details[open]>summary::after{content:"–"}
+  .gs-drawer__links ul{padding:0 0 12px 14px}
+  .gs-drawer__links ul a{font-size:1.15rem;padding:8px 0;color:var(--gs-parch-dim)}
+  .gs-drawer__foot{margin-top:auto;padding-top:28px;display:flex;flex-direction:column;gap:14px}
+  .gs-drawer__verse{font-family:var(--gs-display);font-style:italic;color:var(--gs-parch-dim);border-left:1px solid var(--gs-crimson);padding-left:12px}
+  @media (prefers-reduced-motion:reduce){.gs-drawer__panel,.gs-drawer__scrim{transition:none}}
+</style>
+
+{%- capture logo_html -%}
+  {%- if logo != blank -%}
+    {{ logo | image_url: width: 600 | image_tag: alt: shop.name, loading: 'eager', widths: '200, 300, 400, 600', sizes: '240px' }}
+  {%- else -%}
+    <span class="gs-hdr__word">{{ shop.name | escape }}</span>
+  {%- endif -%}
+{%- endcapture -%}
+
+<header class="gs gs-hdr" data-gs-header>
+  <div class="gs-wrap gs-hdr__row">
+    <div class="gs-hdr__left">
+      <button type="button" class="gs-icon-btn gs-hdr__menu-btn" data-gs-menu-open aria-label="Open menu" aria-controls="gs-drawer-{{ section.id }}" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h12"/></svg>
+      </button>
+    </div>
+
+    <a class="gs-hdr__logo gs-hdr__logo--main" href="{{ routes.root_url }}">
+      {%- if request.page_type == 'index' -%}<h1 class="gs-visually-hidden">{{ shop.name | escape }}</h1>{%- endif -%}
+      {{ logo_html }}
+    </a>
+
+    <div class="gs-hdr__right">
+      <button type="button" class="gs-icon-btn" data-gs-search-toggle aria-label="Search" aria-expanded="false" aria-controls="gs-search-{{ section.id }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+      </button>
+      {%- if shop.customer_accounts_enabled and section.settings.show_account -%}
+        <a class="gs-icon-btn" href="{{ routes.account_url }}" aria-label="Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.2-3.8 4-5.5 7.5-5.5s6.3 1.7 7.5 5.5"/></svg>
+        </a>
+      {%- endif -%}
+      <a class="gs-icon-btn" href="{{ routes.cart_url }}" aria-label="Bag, {{ cart.item_count }} items" data-gs-bag-link>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg>
+        <span class="gs-hdr__count" data-gs-cart-count data-count="{{ cart.item_count }}">{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="gs-hdr__search" id="gs-search-{{ section.id }}" hidden>
+    <form class="gs-wrap" action="{{ routes.search_url }}" method="get" role="search">
+      <label class="gs-visually-hidden" for="gs-q-{{ section.id }}">Search</label>
+      <input class="gs-input" id="gs-q-{{ section.id }}" type="search" name="q" placeholder="Search the collection" autocomplete="off">
+      <input type="hidden" name="options[prefix]" value="last">
+      <button class="gs-btn" type="submit">Search</button>
+    </form>
+  </div>
+</header>
+
+<div class="gs gs-drawer" id="gs-drawer-{{ section.id }}" data-gs-drawer aria-hidden="true">
+  <div class="gs-drawer__scrim" data-gs-menu-close></div>
+  <div class="gs-drawer__panel" role="dialog" aria-modal="true" aria-label="Menu">
+    <div class="gs-drawer__top">
+      <span>Menu</span>
+      <button type="button" class="gs-icon-btn" data-gs-menu-close aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    {%- if menu != blank -%}
+      <ul class="gs-drawer__links">
+        {%- for link in menu.links -%}
+          <li>
+            {%- if link.links.size > 0 -%}
+              <details>
+                <summary>{{ link.title | escape }}</summary>
+                <ul>
+                  <li><a href="{{ link.url }}">All {{ link.title | escape }}</a></li>
+                  {%- for child in link.links -%}
+                    <li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              </details>
+            {%- else -%}
+              <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    <div class="gs-drawer__foot">
+      {%- if section.settings.drawer_verse != blank -%}
+        <p class="gs-drawer__verse">{{ section.settings.drawer_verse | escape }}</p>
+      {%- endif -%}
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="gs-link" href="{{ routes.account_url }}">{% if customer %}My account{% else %}Log in{% endif %}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{%- comment -%} Desktop inline menu: JS moves the logo left and puts this in the middle on wide screens; phones use the drawer. {%- endcomment -%}
+{%- if menu != blank -%}
+<template id="gs-desk-links-{{ section.id }}">
+  <ul class="gs-hdr__nav" aria-label="Main">
+    {%- for link in menu.links -%}
+      <li>
+        <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+        {%- if link.links.size > 0 -%}
+          <ul>
+            {%- for child in link.links -%}<li><a href="{{ child.url }}">{{ child.title | escape }}</a></li>{%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+</template>
+{%- endif -%}
+
+<script>
+(function(){
+  var sid='{{ section.id }}';
+  var hdr=document.querySelector('#shopify-section-'+sid+' [data-gs-header]')||document.querySelector('[data-gs-header]');
+  if(!hdr||hdr.getAttribute('data-ready'))return;hdr.setAttribute('data-ready','1');
+
+  /* desktop menu: on wide screens the logo moves left and the menu takes the middle */
+  var tpl=document.getElementById('gs-desk-links-'+sid);
+  var mq=window.matchMedia('(min-width: 990px)');
+  var main=hdr.querySelector('.gs-hdr__logo--main');
+  var nav=null;
+  if(tpl){nav=tpl.content.firstElementChild.cloneNode(true)}
+  function layout(){
+    var left=hdr.querySelector('.gs-hdr__left');
+    if(mq.matches){
+      if(main.parentNode!==left)left.appendChild(main);
+      if(nav&&!nav.parentNode)left.parentNode.insertBefore(nav,left.nextSibling);
+    }else{
+      var right=hdr.querySelector('.gs-hdr__right');
+      if(main.parentNode===left)right.parentNode.insertBefore(main,right);
+      if(nav&&nav.parentNode)nav.parentNode.removeChild(nav);
+    }
+  }
+  layout();
+  if(mq.addEventListener)mq.addEventListener('change',layout);else if(mq.addListener)mq.addListener(layout);
+
+  /* drawer */
+  var drawer=document.getElementById('gs-drawer-'+sid);
+  var openBtn=hdr.querySelector('[data-gs-menu-open]');
+  function openDrawer(){drawer.classList.add('is-open');drawer.setAttribute('aria-hidden','false');openBtn.setAttribute('aria-expanded','true');document.body.classList.add('gs-locked');var c=drawer.querySelector('[data-gs-menu-close].gs-icon-btn');if(c)c.focus()}
+  function closeDrawer(){if(!drawer.classList.contains('is-open'))return;drawer.classList.remove('is-open');drawer.setAttribute('aria-hidden','true');openBtn.setAttribute('aria-expanded','false');document.body.classList.remove('gs-locked');openBtn.focus()}
+  if(openBtn&&drawer){
+    openBtn.addEventListener('click',openDrawer);
+    drawer.addEventListener('click',function(e){if(e.target.closest('[data-gs-menu-close]'))closeDrawer()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDrawer()});
+  }
+
+  /* search */
+  var sBtn=hdr.querySelector('[data-gs-search-toggle]'),sBox=document.getElementById('gs-search-'+sid);
+  if(sBtn&&sBox){sBtn.addEventListener('click',function(){var open=sBox.hasAttribute('hidden');if(open){sBox.removeAttribute('hidden');sBox.querySelector('input').focus()}else{sBox.setAttribute('hidden','')}sBtn.setAttribute('aria-expanded',String(open))})}
+
+  /* bag count: any gs section can announce a new count */
+  document.addEventListener('gs:cart',function(e){
+    var n=e.detail&&e.detail.count;if(n==null)return;
+    document.querySelectorAll('[data-gs-cart-count]').forEach(function(el){el.textContent=n;el.setAttribute('data-count',n)});
+    var bl=hdr.querySelector('[data-gs-bag-link]');if(bl)bl.setAttribute('aria-label','Bag, '+n+' items');
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "GS Header",
+  "class": "gs-header-section",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    { "type": "range", "id": "logo_h_mobile", "label": "Logo height on phones", "min": 20, "max": 60, "step": 2, "unit": "px", "default": 32 },
+    { "type": "range", "id": "logo_h_desktop", "label": "Logo height on desktop", "min": 20, "max": 80, "step": 2, "unit": "px", "default": 40 },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    { "type": "checkbox", "id": "sticky", "label": "Stay at the top while scrolling", "default": true },
+    { "type": "checkbox", "id": "show_account", "label": "Show account icon", "default": false },
+    { "type": "text", "id": "drawer_verse", "label": "Verse at the bottom of the phone menu", "default": "Thy word is a lamp unto my feet, and a light unto my path. Psalm 119:105" }
+  ],
+  "presets": [ { "name": "GS Header" } ],
+  "enabled_on": { "groups": ["header"] }
+}
+{% endschema %}

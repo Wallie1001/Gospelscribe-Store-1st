@@ -1,0 +1,47 @@
+<section class="gs gs-section gs-bg-{{ section.settings.background }}">
+  <div class="gs-wrap" style="max-width:640px;text-align:center">
+    {%- if section.settings.eyebrow != blank -%}<p class="gs-eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+    <h2 class="gs-title">{{ section.settings.heading | escape }}</h2>
+    {%- if section.settings.text != blank -%}<p class="gs-sub">{{ section.settings.text | escape }}</p>{%- endif -%}
+    <div style="margin-top:26px">
+      {%- if section.settings.klaviyo_embed != blank -%}
+        {{ section.settings.klaviyo_embed }}
+      {%- else -%}
+        {%- assign form_id = 'gs-news-' | append: section.id -%}
+        {%- form 'customer', id: form_id -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          {%- if form.posted_successfully? -%}
+            <p class="gs-link" role="status">You're on the list. Welcome.</p>
+          {%- else -%}
+            <div style="display:flex;gap:8px">
+              <label class="gs-visually-hidden" for="gs-news-email-{{ section.id }}">Email</label>
+              <input class="gs-input" id="gs-news-email-{{ section.id }}" type="email" name="contact[email]" placeholder="your@email.com" required autocomplete="email">
+              <button class="gs-btn gs-btn--red" type="submit">{{ section.settings.button | escape }}</button>
+            </div>
+            {%- if form.errors -%}<p class="gs-hint">{{ form.errors | default_errors }}</p>{%- endif -%}
+          {%- endif -%}
+        {%- endform -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "GS Newsletter",
+  "class": "gs-newsletter-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Join the movement" },
+    { "type": "text", "id": "text", "label": "Text", "default": "Drop alerts and early access, straight to your inbox." },
+    { "type": "text", "id": "button", "label": "Button", "default": "Join" },
+    { "type": "textarea", "id": "klaviyo_embed", "label": "Klaviyo form code (optional)", "info": "Paste your Klaviyo embed code, like <div class=\"klaviyo-form-XXXX\"></div>. Leave empty to use Shopify's own signup form." },
+    { "type": "select", "id": "background", "label": "Background", "default": "umber-2", "options": [
+      { "value": "umber", "label": "Umber (dark)" },
+      { "value": "umber-2", "label": "Umber, lighter" },
+      { "value": "parch", "label": "Parchment (light)" }
+    ] }
+  ],
+  "presets": [ { "name": "GS Newsletter" } ]
+}
+{% endschema %}

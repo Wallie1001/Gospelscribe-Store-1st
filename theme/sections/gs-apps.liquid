@@ -1,0 +1,25 @@
+<section class="gs gs-section gs-bg-{{ section.settings.background }}">
+  <div class="gs-wrap">
+    {%- if section.settings.heading != blank -%}<div class="gs-head gs-head--center"><h2 class="gs-title">{{ section.settings.heading | escape }}</h2></div>{%- endif -%}
+    {%- for block in section.blocks -%}
+      {% render block %}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "GS Apps",
+  "class": "gs-apps-section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "select", "id": "background", "label": "Background", "default": "umber", "options": [
+      { "value": "umber", "label": "Umber (dark)" },
+      { "value": "umber-2", "label": "Umber, lighter" },
+      { "value": "parch", "label": "Parchment (light)" }
+    ] }
+  ],
+  "blocks": [ { "type": "@app" } ],
+  "presets": [ { "name": "GS Apps (reviews, etc.)" } ]
+}
+{% endschema %}

@@ -1,0 +1,60 @@
+{%- assign s = section.settings -%}
+<style>
+  #gs-it-{{ section.id }} .gs-it{display:grid;gap:28px;align-items:center}
+  @media (min-width:750px){#gs-it-{{ section.id }} .gs-it{grid-template-columns:1fr 1fr;gap:64px}#gs-it-{{ section.id }}.img-right .gs-it__media{order:2}}
+  #gs-it-{{ section.id }} .gs-it__media{aspect-ratio:4/5;overflow:hidden;background:var(--gs-umber-2);border:1px solid var(--gs-line)}
+  #gs-it-{{ section.id }}.arch .gs-it__media{border-radius:220px 220px 2px 2px}
+  #gs-it-{{ section.id }} .gs-it__media img{width:100%;height:100%;object-fit:cover}
+  #gs-it-{{ section.id }} .gs-it__btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+</style>
+<section class="gs gs-section gs-bg-{{ s.background }} img-{{ s.image_side }}{% if s.arch %} arch{% endif %}" id="gs-it-{{ section.id }}">
+  <div class="gs-wrap gs-it">
+    <div class="gs-it__media">
+      {%- if s.image != blank -%}
+        {{ s.image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '400, 600, 900, 1200, 1400', sizes: '(min-width: 750px) 50vw, 100vw', alt: s.image.alt | default: '' }}
+      {%- else -%}
+        <div class="gs-placeholder">Add an image</div>
+      {%- endif -%}
+    </div>
+    <div>
+      {%- if s.eyebrow != blank -%}<p class="gs-eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="gs-title">{{ s.heading | escape }}</h2>{%- endif -%}
+      {%- if s.text != blank -%}<div class="gs-rte" style="margin-top:16px;font-size:1.12rem;line-height:1.75">{{ s.text }}</div>{%- endif -%}
+      {%- if s.verse != blank -%}
+        <p style="margin-top:20px;font-family:var(--gs-display);font-style:italic;font-size:1.25rem;border-left:1px solid var(--gs-crimson);padding-left:14px">{{ s.verse | escape }}</p>
+      {%- endif -%}
+      {%- if s.btn1_label != blank or s.btn2_label != blank -%}
+        <div class="gs-it__btns">
+          {%- if s.btn1_label != blank -%}<a class="gs-btn" href="{{ s.btn1_link | default: '#' }}">{{ s.btn1_label | escape }}</a>{%- endif -%}
+          {%- if s.btn2_label != blank -%}<a class="gs-btn gs-btn--plain" href="{{ s.btn2_link | default: '#' }}">{{ s.btn2_label | escape }}</a>{%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "GS Image with text",
+  "class": "gs-image-text-section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "select", "id": "image_side", "label": "Image on", "default": "left", "options": [ { "value": "left", "label": "Left" }, { "value": "right", "label": "Right" } ] },
+    { "type": "checkbox", "id": "arch", "label": "Arched image (like the Testament doors)", "default": false },
+    { "type": "text", "id": "eyebrow", "label": "Small label" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Image with text" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "textarea", "id": "verse", "label": "Verse (optional)" },
+    { "type": "text", "id": "btn1_label", "label": "Button 1 label" },
+    { "type": "url", "id": "btn1_link", "label": "Button 1 link" },
+    { "type": "text", "id": "btn2_label", "label": "Button 2 label" },
+    { "type": "url", "id": "btn2_link", "label": "Button 2 link" },
+    { "type": "select", "id": "background", "label": "Background", "default": "umber", "options": [
+      { "value": "umber", "label": "Umber (dark)" },
+      { "value": "umber-2", "label": "Umber, lighter" },
+      { "value": "parch", "label": "Parchment (light)" }
+    ] }
+  ],
+  "presets": [ { "name": "GS Image with text" } ]
+}
+{% endschema %}

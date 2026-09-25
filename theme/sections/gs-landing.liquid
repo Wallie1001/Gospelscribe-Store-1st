@@ -1,0 +1,170 @@
+{%- comment -%}
+  Gospelscribe landing: lamp -> "Open the book" -> Testament gate -> the home page underneath.
+  On the storefront it covers the page until a visitor chooses the New Testament (or skips).
+  In the theme editor it shows as normal page content so the rest of the home page stays editable.
+{%- endcomment -%}
+{%- liquid
+  assign sid = section.id
+  assign editor = request.design_mode
+-%}
+<style>
+  .gs-land{position:fixed;inset:0;z-index:2147483100;background:#0D0A08;overflow:hidden;transition:opacity 1s ease,visibility 0s}
+  .gs-land.is-gone{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 1s ease,visibility 0s 1s}
+  .gs-land--editor{position:relative;inset:auto;z-index:auto}
+  .gs-land__scene{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:80px 20px;isolation:isolate;transition:opacity 1.1s ease,transform 1.4s ease}
+  .gs-land--editor .gs-land__scene{position:relative;min-height:100svh}
+  .gs-land__scene[aria-hidden="true"]{opacity:0;pointer-events:none;transform:scale(1.03)}
+  .gs-land--editor .gs-land__scene[aria-hidden="true"]{opacity:1;pointer-events:auto;transform:none}
+  .gs-land__bg{position:absolute;inset:0;z-index:-2}
+  .gs-land__bg img{width:100%;height:100%;object-fit:cover;transform:scale(1.04)}
+  .gs-land__scene::after{content:"";position:absolute;inset:0;z-index:-1}
+  .gs-land__lamp .gs-land__bg{background:radial-gradient(ellipse at 50% 58%,rgba(230,176,90,.45),rgba(120,70,25,.18) 25%,transparent 55%),#0D0A08}
+  .gs-land__lamp::after{background:radial-gradient(ellipse at center,rgba(0,0,0,.1),rgba(0,0,0,.75) 75%)}
+  .gs-land__gate .gs-land__bg{background:radial-gradient(ellipse at 66% 55%,rgba(230,190,110,.5),transparent 40%),linear-gradient(#1A1411,#0C0908)}
+  .gs-land__gate::after{background:linear-gradient(180deg,rgba(10,8,6,.7),rgba(10,8,6,.35) 40%,rgba(10,8,6,.88))}
+  .gs-land__glow{position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 50% 55%,rgba(255,190,100,.18),transparent 45%);animation:gs-flicker 3.2s infinite}
+  @keyframes gs-flicker{0%,100%{opacity:.85}20%{opacity:1}35%{opacity:.7}50%{opacity:.95}72%{opacity:.8}}
+  .gs-land__inner{max-width:640px;width:100%;opacity:0;animation:gs-rise 1.6s ease .3s forwards}
+  @keyframes gs-rise{to{opacity:1}}
+  .gs-land__logo img{max-width:min(320px,72vw);height:auto;margin:0 auto}
+  .gs-land h2.gs-land__title{font-family:var(--gs-display);font-size:clamp(3.2rem,12vw,6.4rem);line-height:.95;text-shadow:0 2px 30px rgba(0,0,0,.8)}
+  .gs-land__tag{font-family:var(--gs-display);font-style:italic;font-size:clamp(1.2rem,3.4vw,1.6rem);color:var(--gs-gold-hi);margin:14px 0 36px!important}
+  .gs-land__note{display:block;margin-top:18px;font-style:italic;color:var(--gs-parch-dim);font-size:.95rem}
+  .gs-land__gate h2{font-family:var(--gs-display);font-size:clamp(2.2rem,6vw,3.6rem);margin-bottom:8px!important}
+  .gs-land__doors{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:600px;margin:30px auto 0}
+  .gs-land .gs-door{padding:30px 14px;border:1px solid rgba(201,162,77,.45);background:rgba(12,9,7,.6);border-radius:120px 120px 2px 2px;min-height:200px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;text-align:center;color:var(--gs-parch);text-decoration:none}
+  .gs-door strong{font-family:var(--gs-display);font-weight:400;font-size:1.45rem;line-height:1.1}
+  .gs-door span{font-family:var(--gs-caps);font-size:.98rem;letter-spacing:.06em;color:var(--gs-parch-dim)}
+  .gs-land .gs-door.is-open{border-color:var(--gs-gold);box-shadow:inset 0 0 60px rgba(201,162,77,.18)}
+  .gs-door.is-open span{color:var(--gs-gold-hi)}
+  .gs-land .gs-door.is-open:hover{background:rgba(40,28,14,.75)}
+  .gs-land .gs-door[aria-disabled="true"]{cursor:not-allowed;opacity:.72}
+  .gs-seal{width:30px;height:30px;border-radius:50%;background:var(--gs-crimson);margin-bottom:8px;box-shadow:inset 0 0 0 3px rgba(0,0,0,.25)}
+  .gs-land__sealed-msg{min-height:1.5em;margin-top:14px!important;font-style:italic;color:var(--gs-red-letter)}
+  .gs-land__skip{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px;z-index:5;font-family:var(--gs-caps);letter-spacing:.06em;color:var(--gs-parch);background:rgba(12,9,7,.5);border:1px solid rgba(232,220,196,.25);padding:8px 14px;text-decoration:none}
+  .gs-land__skip:hover{border-color:var(--gs-gold);color:var(--gs-gold-hi)}
+  .gs-land--editor .gs-land__skip{display:none}
+  @media (max-width:480px){.gs-land .gs-door{min-height:170px;padding:24px 8px}.gs-door strong{font-size:1.2rem}}
+  @media (prefers-reduced-motion:reduce){.gs-land__glow{animation:none}.gs-land__inner{animation:none;opacity:1}.gs-land,.gs-land__scene{transition:none}}
+</style>
+
+<div class="gs gs-land{% if editor %} gs-land--editor{% endif %}" id="gs-land-{{ sid }}" data-gs-landing data-once="{{ section.settings.once_per_visit }}" data-nt-link="{{ section.settings.nt_link }}" role="dialog" aria-modal="{% if editor %}false{% else %}true{% endif %}" aria-label="Welcome to {{ shop.name | escape }}">
+  <a class="gs-land__skip" href="#MainContent" data-gs-enter>{{ section.settings.skip_label | escape }}</a>
+
+  <section class="gs-land__scene gs-land__lamp" data-step="lamp">
+    <div class="gs-land__bg">
+      {%- if section.settings.lamp_image != blank -%}
+        {{ section.settings.lamp_image | image_url: width: 1920 | image_tag: loading: 'eager', fetchpriority: 'high', widths: '480, 750, 1080, 1500, 1920', sizes: '100vw', alt: '' }}
+      {%- endif -%}
+    </div>
+    <div class="gs-land__glow" aria-hidden="true"></div>
+    <div class="gs-land__inner">
+      {%- if section.settings.logo != blank -%}
+        <div class="gs-land__logo">{{ section.settings.logo | image_url: width: 700 | image_tag: alt: shop.name, loading: 'eager', widths: '300, 500, 700' }}</div>
+      {%- else -%}
+        <h2 class="gs-land__title">{{ section.settings.title | escape }}</h2>
+      {%- endif -%}
+      <p class="gs-land__tag">{{ section.settings.tagline | escape }}</p>
+      <button type="button" class="gs-btn" data-gs-open-book>{{ section.settings.button | escape }}</button>
+      {%- if section.settings.note != blank -%}<small class="gs-land__note">{{ section.settings.note | escape }}</small>{%- endif -%}
+    </div>
+  </section>
+
+  <section class="gs-land__scene gs-land__gate" data-step="gate" aria-hidden="true">
+    <div class="gs-land__bg">
+      {%- if section.settings.gate_image != blank -%}
+        {{ section.settings.gate_image | image_url: width: 1920 | image_tag: loading: 'lazy', widths: '480, 750, 1080, 1500, 1920', sizes: '100vw', alt: '' }}
+      {%- endif -%}
+    </div>
+    <div style="width:100%">
+      <h2>{{ section.settings.gate_title | escape }}</h2>
+      <p class="gs-sub">{{ section.settings.gate_sub | escape }}</p>
+      <div class="gs-land__doors">
+        <a class="gs-door" href="#" role="button" aria-disabled="true" data-gs-sealed>
+          <span class="gs-seal" aria-hidden="true"></span>
+          <strong>The Old Testament</strong><span>{{ section.settings.ot_label | escape }}</span>
+        </a>
+        <a class="gs-door is-open" href="{{ section.settings.nt_link | default: '#MainContent' }}" data-gs-enter>
+          <strong>The New Testament</strong><span>{{ section.settings.nt_label | escape }}</span>
+        </a>
+      </div>
+      <p class="gs-land__sealed-msg" aria-live="polite" data-gs-sealed-msg></p>
+    </div>
+  </section>
+</div>
+
+{%- unless editor -%}
+<script>
+/* runs before paint: skip the landing for visitors who already entered this visit */
+(function(){
+  var el=document.getElementById('gs-land-{{ sid }}');if(!el)return;
+  var force=/[?&]landing=1/.test(location.search),seen=false;
+  try{seen=sessionStorage.getItem('gs-entered')==='1'}catch(e){}
+  if(el.getAttribute('data-once')==='true'&&seen&&!force){el.classList.add('is-gone');el.style.display='none'}
+  else{document.documentElement.style.overflow='hidden'}
+})();
+</script>
+{%- endunless -%}
+
+<script>
+(function(){
+  var el=document.getElementById('gs-land-{{ sid }}');
+  if(!el||el.getAttribute('data-ready'))return;el.setAttribute('data-ready','1');
+  var editor={{ editor | json }};
+  var lamp=el.querySelector('[data-step="lamp"]'),gate=el.querySelector('[data-step="gate"]');
+  var ntLink=el.getAttribute('data-nt-link');
+  function show(step){
+    [lamp,gate].forEach(function(s){s.setAttribute('aria-hidden',String(s!==step))});
+    var f=step.querySelector('[data-gs-enter].is-open,[data-gs-open-book]');if(f)setTimeout(function(){f.focus({preventScroll:true})},600);
+  }
+  function enter(e){
+    try{sessionStorage.setItem('gs-entered','1')}catch(err){}
+    if(editor)return;
+    var a=e&&e.target.closest('a');
+    if(ntLink&&a&&a.classList.contains('is-open')){return} /* follow the link to another page */
+    if(e)e.preventDefault();
+    el.classList.add('is-gone');
+    document.documentElement.style.overflow='';
+    window.scrollTo(0,0);
+    var main=document.getElementById('MainContent')||document.querySelector('main');
+    if(main){main.setAttribute('tabindex','-1');main.focus({preventScroll:true})}
+  }
+  el.addEventListener('click',function(e){
+    if(e.target.closest('[data-gs-open-book]')){show(gate);return}
+    var s=e.target.closest('[data-gs-sealed]');
+    if(s){e.preventDefault();el.querySelector('[data-gs-sealed-msg]').textContent={{ section.settings.sealed_msg | json }};return}
+    if(e.target.closest('[data-gs-enter]')){enter(e)}
+  });
+  if(!editor)document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!el.classList.contains('is-gone'))enter()});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "GS Landing",
+  "class": "gs-landing-section",
+  "limit": 1,
+  "settings": [
+    { "type": "paragraph", "content": "Shows before the home page: the lamp, then Old or New Testament. Choosing the New Testament opens the home page. In this editor it shows as a normal section so you can still edit everything below it." },
+    { "type": "checkbox", "id": "once_per_visit", "label": "Only show once per visit", "default": true, "info": "Tip: add ?landing=1 to the address to see it again." },
+    { "type": "text", "id": "skip_label", "label": "Skip button", "default": "Skip to shop" },
+    { "type": "header", "content": "Lamp" },
+    { "type": "image_picker", "id": "lamp_image", "label": "Lamp painting" },
+    { "type": "image_picker", "id": "logo", "label": "Logo instead of title (optional)" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Gospelscribe" },
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "Wear the Word" },
+    { "type": "text", "id": "button", "label": "Button", "default": "Open the book" },
+    { "type": "text", "id": "note", "label": "Small note", "default": "The Book of Matthew drop is here." },
+    { "type": "header", "content": "Testament gate" },
+    { "type": "image_picker", "id": "gate_image", "label": "Gate painting" },
+    { "type": "text", "id": "gate_title", "label": "Title", "default": "Where will you begin?" },
+    { "type": "text", "id": "gate_sub", "label": "Subtitle", "default": "Every drop is a book of the Bible." },
+    { "type": "text", "id": "ot_label", "label": "Old Testament label", "default": "Sealed · Coming soon" },
+    { "type": "text", "id": "sealed_msg", "label": "Message when Old Testament is tapped", "default": "The Old Testament is sealed for now. It opens with a future drop." },
+    { "type": "text", "id": "nt_label", "label": "New Testament label", "default": "Enter" },
+    { "type": "url", "id": "nt_link", "label": "New Testament goes to (optional)", "info": "Leave empty to open the home page. Or pick a page, like the Book of Matthew." }
+  ],
+  "presets": [ { "name": "GS Landing" } ],
+  "enabled_on": { "templates": ["index"] }
+}
+{% endschema %}

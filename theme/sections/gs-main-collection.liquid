@@ -1,0 +1,71 @@
+{%- paginate collection.products by section.settings.per_page -%}
+<style>
+  .gs-coll__top{padding:48px 0 24px;text-align:center}
+  .gs-coll__bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;margin-bottom:28px;border-top:1px solid var(--gs-line);border-bottom:1px solid var(--gs-line);font-family:var(--gs-caps);letter-spacing:.06em;color:var(--gs-parch-dim)}
+  .gs-coll__bar select{background:transparent;color:var(--gs-parch);border:1px solid rgba(232,220,196,.3);padding:8px 10px;font-family:var(--gs-body);font-size:.95rem}
+  .gs-coll__bar option{background:var(--gs-umber);color:var(--gs-parch)}
+  .gs-pag{display:flex;justify-content:center;gap:6px;margin-top:48px;font-family:var(--gs-caps)}
+  .gs-pag a,.gs-pag span{min-width:40px;height:40px;display:inline-grid;place-items:center;padding:0 10px;border:1px solid var(--gs-line);color:var(--gs-parch);text-decoration:none}
+  .gs-pag span[aria-current]{background:var(--gs-gold);color:var(--gs-umber);border-color:var(--gs-gold)}
+</style>
+<section class="gs" style="padding-bottom:72px">
+  <div class="gs-wrap">
+    <div class="gs-coll__top">
+      <p class="gs-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h1 class="gs-title gs-title--xl">{{ collection.title | escape }}</h1>
+      {%- if section.settings.show_description and collection.description != blank -%}
+        <div class="gs-rte gs-muted" style="max-width:640px;margin:14px auto 0">{{ collection.description }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="gs-coll__bar">
+      <span>{{ collection.products_count }} {% if collection.products_count == 1 %}piece{% else %}pieces{% endif %}</span>
+      {%- if section.settings.show_sort -%}
+        <label>
+          <span class="gs-visually-hidden">Sort by</span>
+          <select onchange="var u=new URL(location.href);u.searchParams.set('sort_by',this.value);u.searchParams.delete('page');location.href=u">
+            {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name | escape }}</option>
+            {%- endfor -%}
+          </select>
+        </label>
+      {%- endif -%}
+    </div>
+
+    {%- if collection.products.size > 0 -%}
+      <div class="gs-grid" style="--gs-cols-d: {{ section.settings.cols_desktop }}; --gs-cols-m: 2">
+        {%- for product in collection.products -%}
+          {%- render 'gs-product-card', product: product -%}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="gs-sub" style="text-align:center;padding:48px 0">Nothing here yet. New pieces are on the way.</p>
+    {%- endif -%}
+
+    {%- if paginate.pages > 1 -%}
+      <nav class="gs-pag" aria-label="Pages">
+        {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" aria-label="Previous page">‹</a>{%- endif -%}
+        {%- for part in paginate.parts -%}
+          {%- if part.is_link -%}<a href="{{ part.url }}">{{ part.title }}</a>{%- elsif part.title == paginate.current_page -%}<span aria-current="page">{{ part.title }}</span>{%- else -%}<span>{{ part.title }}</span>{%- endif -%}
+        {%- endfor -%}
+        {%- if paginate.next -%}<a href="{{ paginate.next.url }}" aria-label="Next page">›</a>{%- endif -%}
+      </nav>
+    {%- endif -%}
+  </div>
+</section>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "GS Collection page",
+  "class": "gs-main-collection-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small label above the title", "default": "Gospelscribe" },
+    { "type": "checkbox", "id": "show_description", "label": "Show collection description", "default": true },
+    { "type": "checkbox", "id": "show_sort", "label": "Show sorting", "default": true },
+    { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "range", "id": "cols_desktop", "label": "Columns on desktop", "min": 2, "max": 5, "step": 1, "default": 4 }
+  ]
+}
+{% endschema %}

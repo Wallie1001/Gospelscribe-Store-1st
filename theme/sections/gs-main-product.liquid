@@ -1,0 +1,212 @@
+{%- liquid
+  assign s = section.settings
+  assign current = product.selected_or_first_available_variant
+  assign scripture = product.metafields.custom.scripture.value
+-%}
+<style>
+  .gs-pdp{display:grid;gap:26px;padding:0 0 56px}
+  @media (min-width:990px){.gs-pdp{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:56px;padding:40px 0 88px;align-items:start}}
+  .gs-pdp__gallery{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 calc(var(--gs-gutter)*-1)}
+  .gs-pdp__gallery::-webkit-scrollbar{display:none}
+  .gs-pdp__slide{flex:0 0 100%;scroll-snap-align:start;aspect-ratio:4/5;background:#fff}
+  .gs-pdp__slide img{width:100%;height:100%;object-fit:cover}
+  @media (min-width:990px){.gs-pdp__gallery{display:grid;grid-template-columns:1fr 1fr;gap:10px;overflow:visible;margin:0}.gs-pdp__slide:first-child{grid-column:1/-1}}
+  .gs-pdp__dots{display:flex;justify-content:center;gap:7px;margin-top:12px}
+  .gs-pdp__dots span{width:7px;height:7px;border-radius:50%;background:var(--gs-bronze)}
+  .gs-pdp__dots span[aria-current="true"]{background:var(--gs-gold)}
+  @media (min-width:990px){.gs-pdp__dots{display:none}.gs-pdp__info{position:sticky;top:100px}}
+  .gs-pdp__title{font-family:var(--gs-display)!important;font-size:clamp(2rem,5vw,2.8rem);line-height:1.08}
+  .gs-pdp__price{font-family:var(--gs-caps);letter-spacing:.05em;font-size:1.3rem;color:var(--gs-parch);margin:10px 0 0!important}
+  .gs-pdp__price s{color:var(--gs-parch-dim);margin-left:8px;font-size:1.05rem}
+  .gs-pdp__verse{margin:22px 0 0!important;border-left:1px solid var(--gs-crimson);padding-left:14px;font-family:var(--gs-display);font-style:italic;font-size:1.2rem;line-height:1.5}
+  .gs-pdp__verse cite{display:block;margin-top:6px;font-style:normal;font-family:var(--gs-caps);letter-spacing:.08em;font-size:.95rem;color:var(--gs-parch-dim)}
+  .gs-pdp__form{margin-top:26px}
+  .gs-pdp__buy{display:grid;gap:10px}
+  .gs-pdp__buy .shopify-payment-button__button{min-height:48px;border-radius:1px;font-family:var(--gs-caps)!important;letter-spacing:.06em}
+  .gs-pdp__buy .shopify-payment-button__button--unbranded{background:var(--gs-parch);color:var(--gs-umber)}
+  .gs-pdp__buy .shopify-payment-button__more-options{color:var(--gs-parch-dim)}
+  .gs-pdp__added{display:grid;gap:10px;margin-top:12px}
+  .gs-pdp__added[hidden]{display:none}
+  .gs-pdp__note{margin-top:16px!important;font-family:var(--gs-caps);letter-spacing:.06em;color:var(--gs-gold-hi);font-size:.95rem;text-align:center}
+  .gs-pdp__desc{margin-top:28px;border-top:1px solid var(--gs-line)}
+  .gs-pdp__desc details{border-bottom:1px solid var(--gs-line)}
+  .gs-pdp__desc summary{display:flex;justify-content:space-between;padding:16px 0;cursor:pointer;list-style:none;font-family:var(--gs-caps);letter-spacing:.08em;font-size:1.02rem}
+  .gs-pdp__desc summary::-webkit-details-marker{display:none}
+  .gs-pdp__desc summary::after{content:"+";color:var(--gs-gold)}
+  .gs-pdp__desc details[open] summary::after{content:"–"}
+  .gs-pdp__desc .gs-rte{padding:0 0 18px;color:var(--gs-parch-dim);line-height:1.75}
+  .gs-pdp__apps{margin-top:18px}
+</style>
+
+<section class="gs" data-gs-product-section>
+  <div class="gs-wrap">
+    <div class="gs-pdp">
+      <div>
+        <div class="gs-pdp__gallery" data-gs-gallery aria-label="Product images">
+          {%- for media in product.media -%}
+            {%- if media.media_type == 'image' -%}
+              {%- liquid
+                assign load = 'lazy'
+                if forloop.first
+                  assign load = 'eager'
+                endif
+              -%}
+              <div class="gs-pdp__slide" data-media-id="{{ media.id }}">
+                {{ media | image_url: width: 1800 | image_tag: loading: load, widths: '400, 600, 900, 1200, 1500, 1800', sizes: '(min-width: 990px) 55vw, 100vw', alt: media.alt | default: product.title }}
+              </div>
+            {%- endif -%}
+          {%- else -%}
+            <div class="gs-pdp__slide"><div class="gs-placeholder">Gospelscribe</div></div>
+          {%- endfor -%}
+        </div>
+        {%- if product.media.size > 1 -%}
+          <div class="gs-pdp__dots" aria-hidden="true">{%- for media in product.media -%}{%- if media.media_type == 'image' -%}<span{% if forloop.first %} aria-current="true"{% endif %}></span>{%- endif -%}{%- endfor -%}</div>
+        {%- endif -%}
+      </div>
+
+      <div class="gs-pdp__info">
+        {%- if s.show_vendor and product.vendor != blank -%}<p class="gs-eyebrow">{{ product.vendor | escape }}</p>{%- endif -%}
+        <h1 class="gs-pdp__title">{{ product.title | escape }}</h1>
+        <p class="gs-pdp__price" data-gs-price>
+          {{ current.price | money }}
+          {%- if current.compare_at_price > current.price -%}<s>{{ current.compare_at_price | money }}</s>{%- endif -%}
+        </p>
+
+        {%- for block in section.blocks -%}
+          {%- if block.type == '@app' -%}<div class="gs-pdp__apps">{% render block %}</div>{%- endif -%}
+        {%- endfor -%}
+
+        {%- if scripture != blank -%}
+          <blockquote class="gs-pdp__verse">{{ scripture | escape }}</blockquote>
+        {%- endif -%}
+
+        {%- assign form_id = 'gs-pdp-form-' | append: section.id -%}
+        {%- form 'product', product, id: form_id, class: 'gs-pdp__form', novalidate: 'novalidate', data-gs-product-form: '' -%}
+          <input type="hidden" name="id" value="{{ current.id }}" data-gs-variant-id>
+          {%- unless product.has_only_default_variant -%}
+            {%- for option in product.options_with_values -%}
+              {%- assign idx = forloop.index0 -%}
+              <fieldset style="border:0;padding:0;margin:0">
+                <legend class="gs-opt-label">{{ option.name | escape }}<b data-gs-opt-value="{{ idx }}">{{ option.selected_value | escape }}</b></legend>
+                <div class="gs-opts">
+                  {%- for value in option.values -%}
+                    <button type="button" class="gs-opt{% unless value.available %} is-out{% endunless %}" data-i="{{ idx }}" data-v="{{ value | escape }}" aria-pressed="{% if option.selected_value == value %}true{% else %}false{% endif %}">{{ value | escape }}</button>
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+            {%- endfor -%}
+          {%- endunless -%}
+
+          <div class="gs-pdp__buy">
+            <button type="submit" name="add" class="gs-btn gs-btn--red gs-btn--block" data-gs-add{% unless current.available %} disabled{% endunless %}>
+              {%- if current.available -%}{{ s.add_label | escape }}{%- else -%}Sold out{%- endif -%}
+            </button>
+            {%- if s.show_dynamic_checkout -%}{{ form | payment_button }}{%- endif -%}
+          </div>
+          <p class="gs-hint" data-gs-hint aria-live="polite"></p>
+          <div class="gs-pdp__added" data-gs-added hidden>
+            <p style="font-family:var(--gs-display);font-size:1.3rem;color:var(--gs-gold-hi)">Added to your bag.</p>
+            <a class="gs-btn gs-btn--red gs-btn--block" href="/checkout">Checkout</a>
+            <a class="gs-btn gs-btn--plain gs-btn--block" href="{{ routes.cart_url }}">View bag</a>
+          </div>
+        {%- endform -%}
+
+        {%- if s.shipping_note != blank -%}<p class="gs-pdp__note">{{ s.shipping_note | escape }}</p>{%- endif -%}
+
+        <div class="gs-pdp__desc">
+          {%- if product.description != blank and product.description != '.' -%}
+            <details{% if s.open_description %} open{% endif %}>
+              <summary>{{ s.desc_label | escape }}</summary>
+              <div class="gs-rte">{{ product.description }}</div>
+            </details>
+          {%- endif -%}
+          {%- if s.extra_title != blank -%}
+            <details>
+              <summary>{{ s.extra_title | escape }}</summary>
+              <div class="gs-rte">{{ s.extra_text }}</div>
+            </details>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-gs-product-json>
+    {
+      "options": {{ product.options | json }},
+      "variants": [
+        {%- for v in product.variants -%}
+          {"id": {{ v.id }}, "options": {{ v.options | json }}, "available": {{ v.available | json }}, "price": {{ v.price | money | strip_html | json }}, "compare": {% if v.compare_at_price > v.price %}{{ v.compare_at_price | money | strip_html | json }}{% else %}null{% endif %}, "media": {% if v.featured_media %}{{ v.featured_media.id }}{% else %}null{% endif %}}{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+</section>
+
+<script>
+(function(){
+  var root=document.currentScript.previousElementSibling;
+  if(!root||root.getAttribute('data-ready'))return;root.setAttribute('data-ready','1');
+  var data;try{data=JSON.parse(root.querySelector('[data-gs-product-json]').textContent)}catch(e){return}
+  var form=root.querySelector('[data-gs-product-form]');
+  var idInput=root.querySelector('[data-gs-variant-id]'),addBtn=root.querySelector('[data-gs-add]'),hint=root.querySelector('[data-gs-hint]');
+  var priceEl=root.querySelector('[data-gs-price]'),gallery=root.querySelector('[data-gs-gallery]'),added=root.querySelector('[data-gs-added]');
+  var addLabel={{ section.settings.add_label | json }};
+  var sel=[];
+  root.querySelectorAll('.gs-opt[aria-pressed="true"]').forEach(function(b){sel[+b.getAttribute('data-i')]=b.getAttribute('data-v')});
+  function esc(t){var d=document.createElement('span');d.textContent=t;return d.innerHTML}
+  function match(){for(var i=0;i < data.variants.length;i++){var v=data.variants[i],ok=true;for(var n=0;n < data.options.length;n++){if(v.options[n]!==sel[n]){ok=false;break}}if(ok)return v}return null}
+  function update(){
+    var v=match();
+    if(!v){addBtn.disabled=true;addBtn.textContent='Unavailable';return}
+    idInput.value=v.id;
+    addBtn.disabled=!v.available;addBtn.textContent=v.available?addLabel:'Sold out';
+    priceEl.innerHTML=esc(v.price)+(v.compare?'<s>'+esc(v.compare)+'</s>':'');
+    if(history.replaceState){var u=new URL(location.href);u.searchParams.set('variant',v.id);history.replaceState(null,'',u)}
+    if(v.media&&gallery){var slide=gallery.querySelector('[data-media-id="'+v.media+'"]');if(slide)gallery.scrollTo({left:slide.offsetLeft-gallery.offsetLeft,behavior:'smooth'})}
+  }
+  root.addEventListener('click',function(e){
+    var b=e.target.closest('.gs-opt');if(!b)return;
+    var i=+b.getAttribute('data-i');sel[i]=b.getAttribute('data-v');
+    root.querySelectorAll('.gs-opt[data-i="'+i+'"]').forEach(function(x){x.setAttribute('aria-pressed',String(x===b))});
+    var lab=root.querySelector('[data-gs-opt-value="'+i+'"]');if(lab)lab.textContent=sel[i];
+    hint.textContent='';update();
+  });
+  /* dots follow the swipe on phones */
+  if(gallery){var dots=root.querySelectorAll('.gs-pdp__dots span');gallery.addEventListener('scroll',function(){var i=Math.round(gallery.scrollLeft/gallery.clientWidth);dots.forEach(function(d,k){d.setAttribute('aria-current',String(k===i))})},{passive:true})}
+  /* add to bag without leaving the page (falls back to a normal form post) */
+  form.addEventListener('submit',function(e){
+    if(!window.fetch)return;
+    e.preventDefault();
+    addBtn.disabled=true;addBtn.textContent='Adding…';hint.textContent='';
+    fetch(window.Shopify&&Shopify.routes?Shopify.routes.root+'cart/add.js':'/cart/add.js',{method:'POST',headers:{Accept:'application/json'},body:new FormData(form)})
+      .then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})})
+      .then(function(res){
+        if(!res.ok)throw new Error(res.j&&res.j.description||'Could not add to bag.');
+        added.hidden=false;addBtn.textContent='Added';
+        setTimeout(function(){addBtn.disabled=false;addBtn.textContent=addLabel},1800);
+        return fetch('/cart.js',{headers:{Accept:'application/json'}}).then(function(r){return r.json()}).then(function(c){document.dispatchEvent(new CustomEvent('gs:cart',{detail:{count:c.item_count}}))});
+      })
+      .catch(function(err){addBtn.disabled=false;addBtn.textContent=addLabel;hint.textContent=err.message});
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "GS Product page",
+  "class": "gs-main-product-section",
+  "settings": [
+    { "type": "checkbox", "id": "show_vendor", "label": "Show vendor", "default": false },
+    { "type": "text", "id": "add_label", "label": "Add button", "default": "Add to bag" },
+    { "type": "checkbox", "id": "show_dynamic_checkout", "label": "Show Buy it now / Shop Pay button", "default": true },
+    { "type": "text", "id": "shipping_note", "label": "Note under the buttons", "default": "Free shipping on orders over $125" },
+    { "type": "text", "id": "desc_label", "label": "Description heading", "default": "The piece" },
+    { "type": "checkbox", "id": "open_description", "label": "Open the description by default", "default": true },
+    { "type": "text", "id": "extra_title", "label": "Extra dropdown heading", "default": "Shipping" },
+    { "type": "richtext", "id": "extra_text", "label": "Extra dropdown text", "default": "<p>Each piece is made to order. Production takes 3–5 days, then shipping takes 7–14 business days.</p>" },
+    { "type": "paragraph", "content": "Scripture on a product: add a product metafield custom.scripture (single line text) and it shows under the price." }
+  ],
+  "blocks": [ { "type": "@app" } ]
+}
+{% endschema %}

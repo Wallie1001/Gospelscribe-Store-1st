@@ -1,0 +1,86 @@
+{%- liquid
+  assign s = section.settings
+  case s.height
+    when 'small'
+      assign h_m = '55svh'
+      assign h_d = '55vh'
+    when 'medium'
+      assign h_m = '75svh'
+      assign h_d = '75vh'
+    else
+      assign h_m = '100svh'
+      assign h_d = '100vh'
+  endcase
+-%}
+<style>
+  #gs-ib-{{ section.id }}{position:relative;display:flex;min-height:{{ h_m }};overflow:hidden;isolation:isolate}
+  @media (min-width:750px){#gs-ib-{{ section.id }}{min-height:{{ h_d }}}}
+  #gs-ib-{{ section.id }} .gs-ib__bg{position:absolute;inset:0;z-index:-2}
+  #gs-ib-{{ section.id }} .gs-ib__bg img{width:100%;height:100%;object-fit:cover}
+  #gs-ib-{{ section.id }} .gs-ib__bg .gs-ib__m{display:block}
+  #gs-ib-{{ section.id }} .gs-ib__bg .gs-ib__d{display:none}
+  @media (min-width:750px){#gs-ib-{{ section.id }} .gs-ib__bg .gs-ib__m{display:none}#gs-ib-{{ section.id }} .gs-ib__bg .gs-ib__d{display:block}}
+  #gs-ib-{{ section.id }}::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(10,8,6,{{ s.overlay | divided_by: 300.0 }}) 0%,rgba(10,8,6,{{ s.overlay | divided_by: 100.0 }}) 100%)}
+  #gs-ib-{{ section.id }} .gs-ib__inner{width:100%;display:flex;padding:96px var(--gs-gutter) 56px}
+  #gs-ib-{{ section.id }} .gs-ib__box{max-width:640px}
+  #gs-ib-{{ section.id }}.pos-center .gs-ib__inner{align-items:center;justify-content:center;text-align:center}
+  #gs-ib-{{ section.id }}.pos-center .gs-ib__box{margin:0 auto}
+  #gs-ib-{{ section.id }}.pos-bottom-left .gs-ib__inner{align-items:flex-end}
+  #gs-ib-{{ section.id }}.pos-bottom-center .gs-ib__inner{align-items:flex-end;justify-content:center;text-align:center}
+  #gs-ib-{{ section.id }} .gs-ib__btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+  #gs-ib-{{ section.id }}.pos-center .gs-ib__btns,#gs-ib-{{ section.id }}.pos-bottom-center .gs-ib__btns{justify-content:center}
+  #gs-ib-{{ section.id }} .gs-title{text-shadow:0 2px 24px rgba(0,0,0,.7)}
+</style>
+<section class="gs pos-{{ s.position }}" id="gs-ib-{{ section.id }}">
+  <div class="gs-ib__bg">
+    {%- if s.image != blank -%}
+      {%- assign m = s.image_mobile | default: s.image -%}
+      {{ m | image_url: width: 1100 | image_tag: class: 'gs-ib__m', loading: s.loading, widths: '480, 750, 1100', sizes: '100vw', alt: s.image.alt | default: '' }}
+      {{ s.image | image_url: width: 2400 | image_tag: class: 'gs-ib__d', loading: s.loading, widths: '1100, 1500, 1920, 2400', sizes: '100vw', alt: s.image.alt | default: '' }}
+    {%- else -%}
+      <div class="gs-placeholder" style="height:100%">Add an image</div>
+    {%- endif -%}
+  </div>
+  <div class="gs-ib__inner">
+    <div class="gs-ib__box">
+      {%- if s.eyebrow != blank -%}<p class="gs-eyebrow">{{ s.eyebrow | escape }}</p>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="gs-title gs-title--xl">{{ s.heading | escape }}</h2>{%- endif -%}
+      {%- if s.text != blank -%}<div class="gs-rte" style="margin-top:14px;font-size:1.15rem;line-height:1.65">{{ s.text }}</div>{%- endif -%}
+      {%- if s.btn1_label != blank or s.btn2_label != blank -%}
+        <div class="gs-ib__btns">
+          {%- if s.btn1_label != blank -%}<a class="gs-btn" href="{{ s.btn1_link | default: '#' }}">{{ s.btn1_label | escape }}</a>{%- endif -%}
+          {%- if s.btn2_label != blank -%}<a class="gs-btn gs-btn--plain" href="{{ s.btn2_link | default: '#' }}">{{ s.btn2_label | escape }}</a>{%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "GS Image banner",
+  "class": "gs-image-banner-section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "image_picker", "id": "image_mobile", "label": "Phone image (optional)" },
+    { "type": "select", "id": "height", "label": "Height", "default": "medium", "options": [
+      { "value": "small", "label": "Small" }, { "value": "medium", "label": "Medium" }, { "value": "full", "label": "Full screen" }
+    ] },
+    { "type": "select", "id": "position", "label": "Text position", "default": "bottom-left", "options": [
+      { "value": "center", "label": "Center" }, { "value": "bottom-left", "label": "Bottom left" }, { "value": "bottom-center", "label": "Bottom center" }
+    ] },
+    { "type": "range", "id": "overlay", "label": "Darken image", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 55 },
+    { "type": "text", "id": "eyebrow", "label": "Small label" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Wear the Word" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "text", "id": "btn1_label", "label": "Button 1 label", "default": "Shop now" },
+    { "type": "url", "id": "btn1_link", "label": "Button 1 link" },
+    { "type": "text", "id": "btn2_label", "label": "Button 2 label" },
+    { "type": "url", "id": "btn2_link", "label": "Button 2 link" },
+    { "type": "select", "id": "loading", "label": "Image loading", "default": "lazy", "info": "Use \"Right away\" for the first banner on a page.", "options": [
+      { "value": "lazy", "label": "When scrolled to" }, { "value": "eager", "label": "Right away" }
+    ] }
+  ],
+  "presets": [ { "name": "GS Image banner" } ]
+}
+{% endschema %}

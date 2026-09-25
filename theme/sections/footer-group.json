@@ -1,0 +1,56 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "footer": {
+      "type": "gs-footer",
+      "blocks": {
+        "menu_main": {
+          "type": "menu",
+          "settings": {
+            "heading": "Shop",
+            "menu": "main-menu"
+          }
+        },
+        "menu_policies": {
+          "type": "menu",
+          "settings": {
+            "heading": "Our policies",
+            "menu": "our-policies"
+          }
+        }
+      },
+      "block_order": [
+        "menu_main",
+        "menu_policies"
+      ],
+      "settings": {
+        "logo": "shopify://shop_images/gospelscribe-shopify-white-retina-600.png",
+        "logo_h": 40,
+        "tagline": "Wear the Word",
+        "verse": "Go ye therefore, and teach all nations. Matthew 28:19",
+        "show_newsletter": false,
+        "news_heading": "Join the movement",
+        "news_text": "Drop alerts and early access, straight to your inbox.",
+        "klaviyo_embed": "",
+        "instagram": "https://www.instagram.com/gospelscribe/",
+        "tiktok": "https://www.tiktok.com/@gospelscribe",
+        "youtube": "",
+        "show_payment": true,
+        "copyright_extra": ""
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

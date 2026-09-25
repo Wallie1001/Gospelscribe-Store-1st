@@ -1,0 +1,58 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header",
+  "sections": {
+    "announcement": {
+      "type": "gs-announcement",
+      "blocks": {
+        "msg_ship": {
+          "type": "message",
+          "settings": {
+            "text": "Free shipping on orders over $125",
+            "link": ""
+          }
+        },
+        "msg_drop": {
+          "type": "message",
+          "settings": {
+            "text": "The Book of Matthew drop is here",
+            "link": "shopify://pages/book-of-matthew"
+          }
+        }
+      },
+      "block_order": [
+        "msg_ship",
+        "msg_drop"
+      ],
+      "settings": {
+        "style": "marquee",
+        "speed": 35
+      }
+    },
+    "header": {
+      "type": "gs-header",
+      "settings": {
+        "logo": "shopify://shop_images/gospelscribe-shopify-white-retina-600.png",
+        "logo_h_mobile": 32,
+        "logo_h_desktop": 40,
+        "menu": "main-menu",
+        "sticky": true,
+        "show_account": false,
+        "drawer_verse": "Thy word is a lamp unto my feet, and a light unto my path. Psalm 119:105"
+      }
+    }
+  },
+  "order": [
+    "announcement",
+    "header"
+  ]
+}

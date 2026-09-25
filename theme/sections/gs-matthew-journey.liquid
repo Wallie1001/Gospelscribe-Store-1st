@@ -114,8 +114,8 @@
 .gs-mj .gs-story{font-size:1.1rem;line-height:1.7;max-width:36em;margin:0}
 .gs-mj .gs-piece{background:rgba(14,11,9,.78);border:1px solid rgba(201,162,77,.4);padding:18px;border-radius:2px;display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:center;text-align:left;width:100%;text-decoration:none}
 .gs-mj a.gs-piece:hover{border-color:var(--gold)}
-.gs-ph{background:var(--umber-2);aspect-ratio:1/1.1;display:grid;place-items:center;border:1px solid rgba(232,220,196,.08);overflow:hidden}
-.gs-ph img{width:100%;height:100%;object-fit:cover;display:block}
+.gs-mj .gs-ph{background:var(--umber-2);aspect-ratio:1/1.1;display:grid;place-items:center;border:1px solid rgba(232,220,196,.08);overflow:hidden}
+.gs-mj .gs-ph img{width:100%;height:100%;object-fit:cover;display:block}
 .gs-mj .gs-piece h4{font-family:var(--display);font-weight:400;font-size:1.35rem;margin:0 0 4px;line-height:1.15}
 .gs-mj .gs-piece p{margin:0;color:var(--parch-dim);font-size:.95rem}
 .gs-go{display:inline-block;margin-top:8px;font-family:var(--caps);color:var(--gold-hi);letter-spacing:.05em}
@@ -134,26 +134,26 @@
 .gs-rail a:hover span,.gs-rail a:focus-visible span,.gs-rail a[aria-current="true"] span{opacity:1}
 
 /* shop grid */
-.gs-shop{padding:90px 24px 90px;max-width:1120px;margin:0 auto}
+.gs-mj .gs-shop{padding:90px 24px 90px;max-width:1120px;margin:0 auto}
 .gs-mj .gs-shop h2{font-family:var(--display);font-weight:400;font-size:clamp(2.2rem,6vw,3.4rem);margin:0 0 8px;text-align:center}
-.gs-shop .gs-sub{text-align:center;margin-bottom:40px}
-.gs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:22px}
+.gs-mj .gs-shop .gs-sub{text-align:center;margin-bottom:40px}
+.gs-mj .gs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:22px}
 .gs-mj .gs-tile{display:block;text-decoration:none}
 .gs-tile .gs-ph{aspect-ratio:4/5;margin-bottom:12px}
 .gs-tile:hover .gs-ph{border-color:rgba(201,162,77,.5)}
 .gs-mj .gs-tile h4{font-family:var(--display);font-weight:400;font-size:1.25rem;margin:0 0 2px}
 .gs-mj .gs-tile p{margin:0;font-family:var(--caps);color:var(--parch-dim);letter-spacing:.05em;font-size:.92rem}
 .gs-editor-note{border:1px dashed var(--gold);padding:14px;margin:0 0 24px;color:var(--gold-hi);text-align:center}
-.gs-foot{text-align:center;padding:40px 20px 100px;border-top:1px solid rgba(201,162,77,.2);color:var(--parch-dim);font-style:italic}
-.gs-foot p{margin:0}
-.gs-foot b,.gs-foot strong{font-family:var(--caps);font-style:normal;color:var(--gold-hi);font-weight:400;letter-spacing:.06em}
+.gs-mj .gs-foot{text-align:center;padding:40px 20px 100px;border-top:1px solid rgba(201,162,77,.2);color:var(--parch-dim);font-style:italic}
+.gs-mj .gs-foot p{margin:0}
+.gs-mj .gs-foot b,.gs-mj .gs-foot strong{font-family:var(--caps);font-style:normal;color:var(--gold-hi);font-weight:400;letter-spacing:.06em}
 
 /* floating "skip to shop" + bag */
 .gs-float{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:25;display:flex;gap:8px}
 .gs-mj .gs-float a{background:rgba(21,17,14,.92);border:1px solid var(--gold);color:var(--gold-hi);padding:10px 16px;font-family:var(--caps);font-size:1rem;letter-spacing:.05em;text-decoration:none;border-radius:1px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .gs-float{transition:opacity .3s}
 .gs-float.is-hidden{opacity:0;pointer-events:none}
-.gs-count{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:10px;background:var(--crimson);color:#fff;font-family:var(--body);font-size:.75rem;margin-left:6px;padding:0 5px}
+.gs-mj .gs-count{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:10px;background:var(--crimson);color:#fff;font-family:var(--body);font-size:.75rem;margin-left:6px;padding:0 5px}
 
 /* product sheet */
 .gs-scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2147483000;opacity:0;pointer-events:none;transition:opacity .25s}
@@ -161,14 +161,14 @@
 .gs-sheet{position:fixed;z-index:2147483001;left:50%;bottom:0;width:min(880px,100%);max-height:92vh;overflow-y:auto;transform:translate(-50%,105%);visibility:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),visibility 0s .35s;background:var(--umber-2);border-top:2px solid var(--gold);padding:26px 22px calc(26px + env(safe-area-inset-bottom,0px));color:var(--parch)}
 .gs-sheet.show{transform:translate(-50%,0);visibility:visible;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .gs-sheet-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:32px}
-.gs-sheet .gs-ph{aspect-ratio:4/5;background:var(--umber)}
+.gs-mj .gs-sheet .gs-ph{aspect-ratio:4/5;background:var(--umber)}
 .gs-mj .gs-x{position:absolute;top:8px;right:10px;background:none;border:0;font-size:1.8rem;line-height:1;padding:6px 10px;color:var(--parch)}
 .gs-mj .gs-s-ref{font-family:var(--caps);color:var(--gold-hi);letter-spacing:.08em;margin:0}
 .gs-mj .gs-s-name{font-family:var(--display);font-weight:400;font-size:clamp(1.8rem,4vw,2.4rem);line-height:1.1;margin:6px 0 4px}
 .gs-mj .gs-s-price{color:var(--parch-dim);font-style:italic;margin:0 0 14px;font-size:1.1rem}
 .gs-mj .gs-s-note{border-left:1px solid var(--gold);padding-left:16px;margin:14px 0 22px;line-height:1.7;font-size:1.05rem}
-.gs-lbl{display:block;font-family:var(--caps);letter-spacing:.06em;color:var(--parch-dim);margin-bottom:10px}
-.gs-opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.gs-mj .gs-lbl{display:block;font-family:var(--caps);letter-spacing:.06em;color:var(--parch-dim);margin-bottom:10px}
+.gs-mj .gs-opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
 .gs-mj .gs-opt{min-width:50px;height:44px;padding:0 12px;background:none;border:1px solid rgba(232,220,196,.3);border-radius:1px;color:var(--parch)}
 .gs-mj .gs-opt[aria-pressed="true"]{background:var(--parch);color:var(--umber);border-color:var(--parch)}
 .gs-mj .gs-opt.is-out{text-decoration:line-through;opacity:.45}
@@ -176,9 +176,9 @@
 .gs-mj .gs-add:hover{filter:brightness(1.1)}
 .gs-mj .gs-add[disabled]{opacity:.6;cursor:wait}
 .gs-mj .gs-hint{min-height:1.4em;margin:8px 0 0;color:var(--red-letter);font-style:italic}
-.gs-added{display:grid;gap:10px}
+.gs-mj .gs-added{display:grid;gap:10px}
 .gs-mj .gs-added p{margin:0 0 4px;font-family:var(--display);font-size:1.3rem;color:var(--gold-hi)}
-.gs-details{display:inline-block;margin-top:14px;font-family:var(--caps);color:var(--parch-dim);letter-spacing:.05em}
+.gs-mj .gs-details{display:inline-block;margin-top:14px;font-family:var(--caps);color:var(--parch-dim);letter-spacing:.05em}
 
 @media (max-width:820px){
   .gs-stop{padding:100px 20px 96px 44px}
@@ -186,7 +186,7 @@
   .gs-rail{left:14px;gap:14px}
   .gs-rail a span{display:none}
   .gs-sheet-grid{grid-template-columns:1fr;gap:18px}
-  .gs-sheet .gs-ph{aspect-ratio:16/11}
+  .gs-mj .gs-sheet .gs-ph{aspect-ratio:16/11}
 }
 @media (max-width:480px){
   .gs-doors{gap:10px}
@@ -407,7 +407,6 @@
 
   <div class="gs-float">
     <a href="#{{ shop_id }}" data-gs-jump="{{ shop_id }}" data-gs-skip>Skip to shop</a>
-    <a href="{{ routes.cart_url }}">Bag<span class="gs-count" data-gs-count>{{ cart.item_count }}</span></a>
   </div>
 
   <div class="gs-scrim" data-gs-scrim></div>
@@ -455,8 +454,16 @@
 
     /* floating buttons only while the journey is on screen (it can sit above other home page sections) */
     var fl=q('.gs-float');
-    if(fl&&'IntersectionObserver' in window){
-      new IntersectionObserver(function(es){fl.classList.toggle('is-hidden',!es[0].isIntersecting)}).observe(root);
+    if(fl){
+      /* hide once the shop grid (end of the journey) is reached or the journey is off screen, so it never covers the footer or other sections */
+      var shopEl=q('.gs-shop'),tick=false;
+      var sync=function(){
+        var r=root.getBoundingClientRect(),vh=window.innerHeight,st=shopEl?shopEl.getBoundingClientRect().top:Infinity;
+        fl.classList.toggle('is-hidden',r.bottom<vh*.5||r.top>vh||st<vh*.85);
+      };
+      window.addEventListener('scroll',function(){if(!tick){tick=true;requestAnimationFrame(function(){tick=false;sync()})}},{passive:true});
+      window.addEventListener('resize',sync);
+      sync();
     }
 
     /* product sheet */
@@ -506,6 +513,7 @@
     function refreshCart(){
       fetch(cartUrl+'.js',{headers:{Accept:'application/json'}}).then(function(r){return r.json()}).then(function(c){
         qa('[data-gs-count]').forEach(function(n){n.textContent=c.item_count});
+        document.dispatchEvent(new CustomEvent('gs:cart',{detail:{count:c.item_count}}));
       }).catch(function(){});
       /* best effort: refresh the theme's own cart icon (works on Dawn-style themes, ignored elsewhere) */
       var bubble=document.getElementById('cart-icon-bubble');
