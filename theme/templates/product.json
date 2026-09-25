@@ -53,7 +53,7 @@
         "align": "center",
         "limit": 4,
         "cols_desktop": 4,
-        "cols_mobile": 2,
+        "cols_mobile": "2",
         "show_view_all": false,
         "view_all_label": "View all",
         "background": "umber-2"

@@ -94,7 +94,7 @@
         "align": "center",
         "limit": 6,
         "cols_desktop": 3,
-        "cols_mobile": 2,
+        "cols_mobile": "2",
         "show_view_all": true,
         "view_all_label": "View all",
         "background": "umber"
@@ -128,7 +128,7 @@
         "align": "center",
         "limit": 6,
         "cols_desktop": 3,
-        "cols_mobile": 2,
+        "cols_mobile": "2",
         "show_view_all": true,
         "view_all_label": "View all",
         "background": "umber-2"
