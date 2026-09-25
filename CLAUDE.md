@@ -75,10 +75,9 @@ Build the Matthew journey as a Shopify **section + page template** added to his 
 Build the full custom Gospelscribe theme (opening, Testament gate, books, journeys, product pages, cart) and push it with Shopify CLI as an unpublished theme, then publish when ready.
 
 ## Still needed from Bryant
-- Prices, garment types, and colors for the 5 Matthew pieces
-- The 5 products created in Shopify (drafts are fine) so the stops can link to them
-- Product mockups/photos
-- The 8 scene images downloaded from Higgsfield
+- Product descriptions (4 of 5 are just "."). He'll write them himself.
+- Hi-res re-renders of the 8 paintings (optional, for desktop sharpness)
+- Decision on the Matthew 4:17 Black Hoodie bonus stop
 
 ## Phase 1 status (built Sept 25, 2026)
 - `theme/sections/gs-matthew-journey.liquid`: the whole journey (opening, gate, 6 stops, shop grid, product popup with real sizes/prices, add to bag via Shopify's cart). Everything is editable in the theme editor: scene images, products, text. Styles are scoped under `.gs-mj` so it can't restyle the rest of his theme.
@@ -91,4 +90,15 @@ Build the full custom Gospelscribe theme (opening, Testament gate, books, journe
   - Page "The Book of Matthew" (/pages/book-of-matthew, id 122870792261) was created **hidden**, using template suffix `matthew`.
 - The connector cannot publish themes or write to the live theme. Bryant clicks Publish himself.
 - Draft products don't appear on the storefront, so the page can't show them. Products must be Active (or Unlisted) for the journey to show them and add them to the bag.
-- As of Sept 25 none of the 5 Matthew pieces exist in Shopify yet. The stops show "Coming soon" cards until products are picked.
+- Products (created by Bryant Sept 25, vendor ODMPOD/Tapstitch, all $64.99, Color + Size variants), linked in the template by handle:
+  - Bethlehem: `a-savior-is-born-zip-up`
+  - Wilderness: `it-is-written-hoodie`
+  - Galilee: `lord-save-me-hoodie`
+  - Tomb: `he-has-risen-hoodie`
+  - Mountain: `go-and-make-disciples-hoodie`
+- **Launch day checklist**:
+  1. Bryant publishes "Clean Slate + Matthew Journey" (Themes → Publish).
+  2. Make the page visible (pageUpdate isPublished true).
+  3. Products set to Active if they're still Unlisted.
+  4. Add "The Book of Matthew" to the main menu.
+  - Before publishing, check whether the live theme changed since Sept 25. If it did, those changes need copying to the working copy first.
