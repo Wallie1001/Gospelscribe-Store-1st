@@ -114,6 +114,7 @@ Bryant wanted no Clean Slate look at all. Everything visible on the working copy
 - Product/collection/cart pages: gs-main-product (AJAX add + dynamic checkout + @app blocks; optional metafield custom.scripture), gs-main-collection, gs-main-cart (free shipping bar at $125).
 - Shared styles: `assets/gs-base.css` (tokens + .gs components). Placeholder class is `.gs-placeholder` (the journey owns `.gs-ph`). The journey CSS is scoped under `.gs-mj`.
 - Cart count: any section dispatches `document` event `gs:cart` {count}; the header updates `[data-gs-cart-count]`.
+- Matthew page (`page.matthew.json`): opening and gate are both **off** (Bryant: repeating the lamp after the landing felt wrong), so it opens straight on Bethlehem. When the page has no opening, the first stop's painting loads eagerly.
 - Still Clean Slate inside (they get our header/footer/background): search results, Our Story / Contact / Charity pages, 404, blog, account.
 - Gotcha: Shopify silently rejected a section whose range setting had only 2 values (min 1, max 2). Use a select instead. After every themeFilesUpsert, check that each file exists and its checksumMd5 matches.
 - Local render harness (liquidjs + Playwright) lived in the session scratchpad and was not committed.
