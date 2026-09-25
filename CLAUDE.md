@@ -98,6 +98,7 @@ Build the full custom Gospelscribe theme (opening, Testament gate, books, journe
   - Galilee: `lord-save-me-hoodie`
   - Tomb: `he-has-risen-hoodie`
   - Mountain: `go-and-make-disciples-hoodie`
+- **Drop day is Sept 27, 2026.** Bryant tested publishing on Sept 25, then unpublished on purpose; Clean Slate stays live until the 27th. The 5 Matthew hoodies are already ACTIVE, so they can show in the live shop early.
 - **Launch day checklist**:
   1. Bryant publishes "Clean Slate + Matthew Journey" (Themes → Publish).
   2. ~~Make the page visible~~: done Sept 25 at Bryant's request (the preview 404ed while it was hidden). Its body reads "opens soon…"; only the live Clean Slate theme shows that body, the journey template ignores it.
