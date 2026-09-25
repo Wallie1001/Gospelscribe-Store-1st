@@ -17,7 +17,8 @@
             "piece_ref": "Matthew 1–2",
             "note": "This piece represents the arrival of the Savior and the beginning of the earthly life of Jesus. Inspired by Matthew 1:18–25 and 2:1–12.",
             "no_piece_text": "No piece here. Just the cross.",
-            "show_commission": false
+            "show_commission": false,
+            "image": "shopify://shop_images/gs-matthew-bethlehem.png"
           }
         },
         "stop_wilderness": {
@@ -34,7 +35,8 @@
             "piece_ref": "Matthew 4:1–11",
             "note": "This piece represents the power of knowing God’s Word and standing on Scripture when temptation comes. Inspired by Matthew 4:1–11, especially 4:4.",
             "no_piece_text": "No piece here. Just the cross.",
-            "show_commission": false
+            "show_commission": false,
+            "image": "shopify://shop_images/gs-matthew-wilderness.png"
           }
         },
         "stop_galilee": {
@@ -51,7 +53,8 @@
             "piece_ref": "Matthew 14:30",
             "note": "A reminder that even when our faith becomes shaken and fear takes over, we can still call on Jesus. Inspired by Matthew 14:30.",
             "no_piece_text": "No piece here. Just the cross.",
-            "show_commission": false
+            "show_commission": false,
+            "image": "shopify://shop_images/gs-matthew-galilee.png"
           }
         },
         "stop_cross": {
@@ -68,7 +71,8 @@
             "piece_ref": "",
             "note": "",
             "no_piece_text": "No piece here. Just the cross.",
-            "show_commission": false
+            "show_commission": false,
+            "image": "shopify://shop_images/gs-matthew-cross.png"
           }
         },
         "stop_tomb": {
@@ -85,7 +89,8 @@
             "piece_ref": "Matthew 28:1–10",
             "note": "This piece represents the resurrection of Jesus Christ: the empty tomb and the victory over death. Inspired by Matthew 28:1–10.",
             "no_piece_text": "No piece here. Just the cross.",
-            "show_commission": false
+            "show_commission": false,
+            "image": "shopify://shop_images/gs-matthew-tomb.png"
           }
         },
         "stop_mountain": {
@@ -102,7 +107,8 @@
             "piece_ref": "Matthew 28:16–20",
             "note": "This piece represents the mission to take what we’ve learned from Scripture and share it with others. Inspired by Matthew 28:16–20.",
             "no_piece_text": "No piece here. Just the cross.",
-            "show_commission": true
+            "show_commission": true,
+            "image": "shopify://shop_images/gs-matthew-mountain.png"
           }
         }
       },
@@ -126,7 +132,9 @@
         "shop_title": "The Book of Matthew",
         "shop_sub": "Five pieces. Five moments. One story.",
         "ambassador_url": "https://af.uppromote.com/Gospelscribe/register",
-        "footer_note": "<p>Next to open: <strong>Mark</strong> · The Old Testament remains sealed</p>"
+        "footer_note": "<p>Next to open: <strong>Mark</strong> · The Old Testament remains sealed</p>",
+        "lamp_image": "shopify://shop_images/gs-matthew-lamp.png",
+        "gate_image": "shopify://shop_images/gs-matthew-gate.png"
       }
     }
   },
