@@ -25,7 +25,12 @@
         "ot_label": "Sealed · Coming soon",
         "sealed_msg": "The Old Testament is sealed for now. It opens with a future drop.",
         "nt_label": "Enter",
-        "nt_link": ""
+        "nt_open_label": "Open",
+        "books_title": "The Gospels",
+        "matthew_link": "shopify://pages/book-of-matthew",
+        "matthew_label": "Open now",
+        "book_sealed_msg": "[book] is sealed. It opens with a future drop.",
+        "shop_label": "Or enter the shop"
       }
     },
     "matthew_banner": {

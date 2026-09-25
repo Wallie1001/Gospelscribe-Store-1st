@@ -15,7 +15,7 @@
   .gs-land--editor .gs-land__scene{position:relative;min-height:100svh}
   .gs-land__scene[aria-hidden="true"]{opacity:0;pointer-events:none;transform:scale(1.03)}
   .gs-land--editor .gs-land__scene[aria-hidden="true"]{opacity:1;pointer-events:auto;transform:none}
-  .gs-land__bg{position:absolute;inset:0;z-index:-2}
+  .gs-land__bg{position:absolute;inset:0;z-index:-2;overflow:hidden}
   .gs-land__bg img{width:100%;height:100%;object-fit:cover;transform:scale(1.04)}
   .gs-land__scene::after{content:"";position:absolute;inset:0;z-index:-1}
   .gs-land__lamp .gs-land__bg{background:radial-gradient(ellipse at 50% 58%,rgba(230,176,90,.45),rgba(120,70,25,.18) 25%,transparent 55%),#0D0A08}
@@ -40,6 +40,22 @@
   .gs-land .gs-door.is-open:hover{background:rgba(40,28,14,.75)}
   .gs-land .gs-door[aria-disabled="true"]{cursor:not-allowed;opacity:.72}
   .gs-seal{width:30px;height:30px;border-radius:50%;background:var(--gs-crimson);margin-bottom:8px;box-shadow:inset 0 0 0 3px rgba(0,0,0,.25)}
+  .gs-land__gate{overflow-x:hidden;overflow-y:auto;align-content:center}
+  .gs-land__books{max-width:600px;margin:26px auto 0}
+  .gs-land__books[hidden]{display:none}
+  .gs-land__books.show{animation:gs-rise .8s ease forwards;opacity:0}
+  .gs-land__books h3{font-family:var(--gs-caps);font-weight:400;font-size:1.05rem;letter-spacing:.1em;color:var(--gs-gold-hi);margin:0 0 12px!important}
+  .gs-land__book-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .gs-land .gs-book{display:block;padding:16px 8px;border:1px solid rgba(232,220,196,.2);background:rgba(12,9,7,.6);border-radius:2px;text-align:center;color:var(--gs-parch);text-decoration:none}
+  .gs-book b{display:block;font-family:var(--gs-display);font-weight:400;font-size:1.3rem}
+  .gs-book small{font-family:var(--gs-caps);color:var(--gs-parch-dim);font-size:.85rem;letter-spacing:.05em}
+  .gs-land .gs-book.is-open{border-color:var(--gs-gold);box-shadow:inset 0 0 40px rgba(201,162,77,.16)}
+  .gs-land .gs-book.is-open:hover{background:rgba(40,28,14,.75)}
+  .gs-book.is-open small{color:var(--gs-gold-hi)}
+  .gs-land .gs-book[aria-disabled="true"]{opacity:.55;cursor:not-allowed}
+  .gs-land__shop{display:inline-block;margin-top:18px;font-family:var(--gs-caps);letter-spacing:.06em;color:var(--gs-parch-dim);text-decoration:none;border-bottom:1px solid var(--gs-line)}
+  .gs-land__shop:hover{color:var(--gs-gold-hi)}
+  @media (max-width:480px){.gs-land__book-row{grid-template-columns:1fr 1fr}}
   .gs-land__sealed-msg{min-height:1.5em;margin-top:14px!important;font-style:italic;color:var(--gs-red-letter)}
   .gs-land__skip{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:14px;z-index:5;font-family:var(--gs-caps);letter-spacing:.06em;color:var(--gs-parch);background:rgba(12,9,7,.5);border:1px solid rgba(232,220,196,.25);padding:8px 14px;text-decoration:none}
   .gs-land__skip:hover{border-color:var(--gs-gold);color:var(--gs-gold-hi)}
@@ -48,7 +64,7 @@
   @media (prefers-reduced-motion:reduce){.gs-land__glow{animation:none}.gs-land__inner{animation:none;opacity:1}.gs-land,.gs-land__scene{transition:none}}
 </style>
 
-<div class="gs gs-land{% if editor %} gs-land--editor{% endif %}" id="gs-land-{{ sid }}" data-gs-landing data-once="{{ section.settings.once_per_visit }}" data-nt-link="{{ section.settings.nt_link }}" role="dialog" aria-modal="{% if editor %}false{% else %}true{% endif %}" aria-label="Welcome to {{ shop.name | escape }}">
+<div class="gs gs-land{% if editor %} gs-land--editor{% endif %}" id="gs-land-{{ sid }}" data-gs-landing data-once="{{ section.settings.once_per_visit }}" role="dialog" aria-modal="{% if editor %}false{% else %}true{% endif %}" aria-label="Welcome to {{ shop.name | escape }}">
   <a class="gs-land__skip" href="#MainContent" data-gs-enter>{{ section.settings.skip_label | escape }}</a>
 
   <section class="gs-land__scene gs-land__lamp" data-step="lamp">
@@ -80,15 +96,26 @@
       <h2>{{ section.settings.gate_title | escape }}</h2>
       <p class="gs-sub">{{ section.settings.gate_sub | escape }}</p>
       <div class="gs-land__doors">
-        <a class="gs-door" href="#" role="button" aria-disabled="true" data-gs-sealed>
+        <a class="gs-door" href="#" role="button" aria-disabled="true" data-gs-sealed data-msg="{{ section.settings.sealed_msg | escape }}">
           <span class="gs-seal" aria-hidden="true"></span>
           <strong>The Old Testament</strong><span>{{ section.settings.ot_label | escape }}</span>
         </a>
-        <a class="gs-door is-open" href="{{ section.settings.nt_link | default: '#MainContent' }}" data-gs-enter>
-          <strong>The New Testament</strong><span>{{ section.settings.nt_label | escape }}</span>
-        </a>
+        <button type="button" class="gs-door is-open" data-gs-nt aria-expanded="{% if editor %}true{% else %}false{% endif %}" aria-controls="gs-land-books-{{ sid }}">
+          <strong>The New Testament</strong><span data-gs-nt-label>{{ section.settings.nt_label | escape }}</span>
+        </button>
+      </div>
+      <div class="gs-land__books" id="gs-land-books-{{ sid }}"{% unless editor %} hidden{% endunless %}>
+        <h3>{{ section.settings.books_title | escape }}</h3>
+        <div class="gs-land__book-row">
+          <a class="gs-book is-open" href="{{ section.settings.matthew_link | default: '/pages/book-of-matthew' }}" data-gs-go><b>Matthew</b><small>{{ section.settings.matthew_label | escape }}</small></a>
+          {%- assign sealed = 'Mark,Luke,John' | split: ',' -%}
+          {%- for book in sealed -%}
+            <a class="gs-book" href="#" role="button" aria-disabled="true" data-gs-sealed data-msg="{{ section.settings.book_sealed_msg | replace: '[book]', book | escape }}"><b>{{ book }}</b><small>Sealed</small></a>
+          {%- endfor -%}
+        </div>
       </div>
       <p class="gs-land__sealed-msg" aria-live="polite" data-gs-sealed-msg></p>
+      <a class="gs-land__shop" href="#MainContent" data-gs-enter>{{ section.settings.shop_label | escape }}</a>
     </div>
   </section>
 </div>
@@ -112,16 +139,13 @@
   if(!el||el.getAttribute('data-ready'))return;el.setAttribute('data-ready','1');
   var editor={{ editor | json }};
   var lamp=el.querySelector('[data-step="lamp"]'),gate=el.querySelector('[data-step="gate"]');
-  var ntLink=el.getAttribute('data-nt-link');
   function show(step){
     [lamp,gate].forEach(function(s){s.setAttribute('aria-hidden',String(s!==step))});
-    var f=step.querySelector('[data-gs-enter].is-open,[data-gs-open-book]');if(f)setTimeout(function(){f.focus({preventScroll:true})},600);
+    var f=step.querySelector('[data-gs-nt],[data-gs-open-book]');if(f)setTimeout(function(){f.focus({preventScroll:true})},600);
   }
   function enter(e){
     try{sessionStorage.setItem('gs-entered','1')}catch(err){}
     if(editor)return;
-    var a=e&&e.target.closest('a');
-    if(ntLink&&a&&a.classList.contains('is-open')){return} /* follow the link to another page */
     if(e)e.preventDefault();
     el.classList.add('is-gone');
     document.documentElement.style.overflow='';
@@ -132,7 +156,17 @@
   el.addEventListener('click',function(e){
     if(e.target.closest('[data-gs-open-book]')){show(gate);return}
     var s=e.target.closest('[data-gs-sealed]');
-    if(s){e.preventDefault();el.querySelector('[data-gs-sealed-msg]').textContent={{ section.settings.sealed_msg | json }};return}
+    if(s){e.preventDefault();el.querySelector('[data-gs-sealed-msg]').textContent=s.getAttribute('data-msg');return}
+    var nt=e.target.closest('[data-gs-nt]');
+    if(nt){
+      var books=el.querySelector('.gs-land__books');books.hidden=false;books.classList.add('show');
+      nt.setAttribute('aria-expanded','true');nt.querySelector('[data-gs-nt-label]').textContent={{ section.settings.nt_open_label | json }};
+      el.querySelector('[data-gs-sealed-msg]').textContent='';
+      var m=books.querySelector('[data-gs-go]');if(m)setTimeout(function(){m.focus({preventScroll:true});books.scrollIntoView({block:'nearest',behavior:'smooth'})},250);
+      return;
+    }
+    /* Matthew: remember they entered, then follow the link into the journey */
+    if(e.target.closest('[data-gs-go]')){try{sessionStorage.setItem('gs-entered','1')}catch(err){}return}
     if(e.target.closest('[data-gs-enter]')){enter(e)}
   });
   if(!editor)document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!el.classList.contains('is-gone'))enter()});
@@ -145,7 +179,7 @@
   "class": "gs-landing-section",
   "limit": 1,
   "settings": [
-    { "type": "paragraph", "content": "Shows before the home page: the lamp, then Old or New Testament. Choosing the New Testament opens the home page. In this editor it shows as a normal section so you can still edit everything below it." },
+    { "type": "paragraph", "content": "Shows before the home page: the lamp, then Old or New Testament, then the Gospels. Matthew opens the journey. \"Skip to shop\" and \"Or enter the shop\" open the home page. In this editor it shows as a normal section so you can still edit everything below it." },
     { "type": "checkbox", "id": "once_per_visit", "label": "Only show once per visit", "default": true, "info": "Tip: add ?landing=1 to the address to see it again." },
     { "type": "text", "id": "skip_label", "label": "Skip button", "default": "Skip to shop" },
     { "type": "header", "content": "Lamp" },
@@ -162,7 +196,13 @@
     { "type": "text", "id": "ot_label", "label": "Old Testament label", "default": "Sealed · Coming soon" },
     { "type": "text", "id": "sealed_msg", "label": "Message when Old Testament is tapped", "default": "The Old Testament is sealed for now. It opens with a future drop." },
     { "type": "text", "id": "nt_label", "label": "New Testament label", "default": "Enter" },
-    { "type": "url", "id": "nt_link", "label": "New Testament goes to (optional)", "info": "Leave empty to open the home page. Or pick a page, like the Book of Matthew." }
+    { "type": "text", "id": "nt_open_label", "label": "New Testament label once opened", "default": "Open" },
+    { "type": "header", "content": "The Gospels" },
+    { "type": "text", "id": "books_title", "label": "Heading", "default": "The Gospels" },
+    { "type": "url", "id": "matthew_link", "label": "Matthew goes to", "info": "Pick the Book of Matthew page." },
+    { "type": "text", "id": "matthew_label", "label": "Matthew label", "default": "Open now" },
+    { "type": "text", "id": "book_sealed_msg", "label": "Message when a sealed book is tapped", "default": "[book] is sealed. It opens with a future drop.", "info": "[book] becomes Mark, Luke or John." },
+    { "type": "text", "id": "shop_label", "label": "Link to the shop under the books", "default": "Or enter the shop" }
   ],
   "presets": [ { "name": "GS Landing" } ],
   "enabled_on": { "templates": ["index"] }
