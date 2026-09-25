@@ -272,6 +272,10 @@
     {%- if block.type != 'stop' -%}{%- continue -%}{%- endif -%}
     {%- liquid
       assign stop_count = stop_count | plus: 1
+      assign img_load = 'lazy'
+      if stop_count == 1 and section.settings.show_opening == false and section.settings.show_gate == false
+        assign img_load = 'eager'
+      endif
       assign b = block.settings
       assign p = b.product
       if p != blank
@@ -292,7 +296,7 @@
     >
       <div class="gs-bg gs-fb-{{ b.mood }}">
         {%- if b.image != blank -%}
-          {{ b.image | image_url: width: 1920 | image_tag: loading: 'lazy', widths: '480, 750, 1080, 1500, 1920', sizes: '100vw', alt: '' }}
+          {{ b.image | image_url: width: 1920 | image_tag: loading: img_load, widths: '480, 750, 1080, 1500, 1920', sizes: '100vw', alt: '' }}
         {%- endif -%}
       </div>
       <div class="gs-stop-inner">

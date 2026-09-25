@@ -135,7 +135,7 @@
         "stop_mountain"
       ],
       "settings": {
-        "show_opening": true,
+        "show_opening": false,
         "opening_title": "The Book of Matthew",
         "opening_tagline": "Walk with Jesus, from Bethlehem to the mountain",
         "opening_button": "Begin the journey",
