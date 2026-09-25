@@ -104,3 +104,16 @@ Build the full custom Gospelscribe theme (opening, Testament gate, books, journe
   3. Products set to Active if they're still Unlisted.
   4. Add "The Book of Matthew" to the main menu.
   - Before publishing, check whether the live theme changed since Sept 25. If it did, those changes need copying to the working copy first.
+
+## Gospelscribe theme layer (Sept 25, evening), replacing Clean Slate's look
+Bryant wanted no Clean Slate look at all. Everything visible on the working copy (id 153989251141) is now ours:
+- `layout/theme.liquid` is Clean Slate's layout with its static sections removed (announcement-bar, countdown-timer, search-drawer, landing-page, newsletter-popup, music-player, loading-screen), plus `{% render 'gs-head' %}` and `<main id="MainContent">`. Clean Slate's css-variables/theme-core snippets still load so any leftover Clean Slate pages keep working.
+- Header group: `gs-announcement` + `gs-header`. Footer group: `gs-footer`.
+- Home (`index.json`): `gs-landing` (lamp → Testament gate → home; once per visit via sessionStorage `gs-entered`; `?landing=1` replays it; shows as a normal section in the editor), then Matthew banner, collection list, Best Sellers, Wear the Word banner, New Arrivals, features, ambassador, Judge.me reviews (`gs-apps`), Klaviyo newsletter (form RGpwcS).
+- Section library for Bryant: gs-collection, gs-collection-list, gs-rich-text, gs-image-banner, gs-image-text, gs-features, gs-newsletter, gs-apps.
+- Product/collection/cart pages: gs-main-product (AJAX add + dynamic checkout + @app blocks; optional metafield custom.scripture), gs-main-collection, gs-main-cart (free shipping bar at $125).
+- Shared styles: `assets/gs-base.css` (tokens + .gs components). Placeholder class is `.gs-placeholder` (the journey owns `.gs-ph`). The journey CSS is scoped under `.gs-mj`.
+- Cart count: any section dispatches `document` event `gs:cart` {count}; the header updates `[data-gs-cart-count]`.
+- Still Clean Slate inside (they get our header/footer/background): search results, Our Story / Contact / Charity pages, 404, blog, account.
+- Gotcha: Shopify silently rejected a section whose range setting had only 2 values (min 1, max 2). Use a select instead. After every themeFilesUpsert, check that each file exists and its checksumMd5 matches.
+- Local render harness (liquidjs + Playwright) lived in the session scratchpad and was not committed.
