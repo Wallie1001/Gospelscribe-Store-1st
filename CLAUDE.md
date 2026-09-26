@@ -119,3 +119,10 @@ Bryant wanted no Clean Slate look at all. Everything visible on the working copy
 - Still Clean Slate inside (they get our header/footer/background): search results, Our Story / Contact / Charity pages, 404, blog, account.
 - Gotcha: Shopify silently rejected a section whose range setting had only 2 values (min 1, max 2). Use a select instead. After every themeFilesUpsert, check that each file exists and its checksumMd5 matches.
 - Local render harness (liquidjs + Playwright) lived in the session scratchpad and was not committed.
+
+## Password page (Sept 26)
+- `sections/gs-password.liquid` + `templates/password.json` + `layout/password.liquid` (our layout: meta-tags + gs-head + content_for_header) on the Matthew theme.
+- Countdown to 2026-09-27 17:00 at -07:00 (5 PM PT, Sunday). At zero it shows "The book is open" plus Enter. It does NOT turn off password protection: Bryant must do that in Online Store → Preferences.
+- Email signup posts to Klaviyo's public client subscriptions API: company_id/public key `UAqA5m`, list `SAHbHz` ("Email List", double opt-in), custom_source "Password page · Book of Matthew". Klaviyo account timezone is US/Eastern.
+- The password page only shows the Matthew design when that theme is published AND password protection is on.
+- As of Sept 26 the live (MAIN) theme is still Clean Slate.
