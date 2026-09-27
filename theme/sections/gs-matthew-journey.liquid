@@ -356,7 +356,6 @@
             "ref": {{ b.piece_ref | default: b.verse_ref | json }},
             "note": {{ b.note | json }},
             "url": {{ p.url | json }},
-            "image": {% if p.featured_image != blank %}{{ p.featured_image | image_url: width: 900 | json }}{% else %}null{% endif %},
             "price": {{ p.price_min | money | strip_html | json }},
             "priceVaries": {{ p.price_varies | json }},
             "single": {{ p.has_only_default_variant | json }},
@@ -368,6 +367,17 @@
             ]
           }
         </script>
+        {%- liquid
+          assign pop_img = b.popup_image
+          if pop_img == blank
+            assign pop_img = p.featured_image
+          endif
+        -%}
+        <template id="gs-img-{{ block.id }}">
+          {%- if pop_img != blank -%}
+            {{ pop_img | image_url: width: 1000 | image_tag: widths: '400, 600, 800, 1000', sizes: '(min-width: 820px) 400px, 100vw', alt: piece_name, loading: 'eager' }}
+          {%- endif -%}
+        </template>
       {%- endif -%}
     </section>
   {%- endfor -%}
@@ -494,11 +504,13 @@
     function openSheet(bid,trigger){
       var el=document.getElementById('gs-data-'+bid);if(!el)return;
       var d;try{d=JSON.parse(el.textContent)}catch(err){window.location=trigger.href;return}
+      var tpl=document.getElementById('gs-img-'+bid);
+      var photo=tpl&&tpl.innerHTML.trim()?tpl.innerHTML.trim():'';
       state={d:d,sel:[]};
       d.options.forEach(function(name,i){var vals=[];d.variants.forEach(function(v){if(vals.indexOf(v.options[i])<0)vals.push(v.options[i])});if(vals.length===1)state.sel[i]=vals[0]});
       lastFocus=trigger;
       sheet.innerHTML='<button type="button" class="gs-x" data-gs-close aria-label="Close">×</button>'+
-        '<div class="gs-sheet-grid"><div class="gs-ph'+(d.image?'':' is-empty')+'">'+(d.image?'<img src="'+esc(d.image)+'" alt="'+esc(d.name)+'" width="900" height="900" decoding="async">':TEE)+'</div><div>'+
+        '<div class="gs-sheet-grid"><div class="gs-ph'+(photo?'':' is-empty')+'">'+(photo||TEE)+'</div><div>'+
         (d.ref?'<p class="gs-s-ref">'+esc(d.ref)+'</p>':'')+
         '<h2 class="gs-s-name">'+esc(d.name)+'</h2><p class="gs-s-price" data-gs-price>'+esc(priceFor())+'</p>'+
         (d.note?'<p class="gs-s-note">'+esc(d.note)+'</p>':'')+
@@ -617,6 +629,7 @@
         { "type": "textarea", "id": "story", "label": "What happened here" },
         { "type": "header", "content": "The piece" },
         { "type": "product", "id": "product", "label": "Product" },
+        { "type": "image_picker", "id": "popup_image", "label": "Popup photo", "info": "The photo shown when someone taps this piece. Leave empty to use the product's main photo." },
         { "type": "text", "id": "piece_name", "label": "Piece name", "info": "Leave blank to use the product title. If no product is picked yet, this shows as \"Coming soon\"." },
         { "type": "text", "id": "piece_ref", "label": "Piece scripture label", "info": "Shown above the name in the product popup." },
         { "type": "textarea", "id": "note", "label": "Study note", "info": "Shown in the product popup." },
