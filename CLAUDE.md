@@ -126,3 +126,8 @@ Bryant wanted no Clean Slate look at all. Everything visible on the working copy
 - Email signup posts to Klaviyo's public client subscriptions API: company_id/public key `UAqA5m`, list `SAHbHz` ("Email List", double opt-in), custom_source "Password page · Book of Matthew". Klaviyo account timezone is US/Eastern.
 - The password page only shows the Matthew design when that theme is published AND password protection is on.
 - As of Sept 26 the live (MAIN) theme is still Clean Slate.
+
+## Gotcha: Clean Slate media-loader (fixed Sept 27)
+- Clean Slate's `snippets/media-loader.liquid` sets every `.shopify-section img` to opacity 0 until its script adds `.ml-loaded`, and that script only runs on DOMContentLoaded. Any image inserted later by JS stayed invisible; this caused the blank journey popup photo.
+- Removed `{% render 'media-loader' %}` from the Matthew theme's layout. Dynamically inserted images should still carry `data-skip-fade` as a backstop.
+- The popup photo is now rendered by Liquid into `<template id="gs-img-{block.id}">` (block setting `popup_image`, falling back to the product's featured image).
