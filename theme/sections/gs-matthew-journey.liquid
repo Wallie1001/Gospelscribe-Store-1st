@@ -161,7 +161,10 @@
 .gs-sheet{position:fixed;z-index:2147483001;left:50%;bottom:0;width:min(880px,100%);max-height:92vh;overflow-y:auto;transform:translate(-50%,105%);visibility:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),visibility 0s .35s;background:var(--umber-2);border-top:2px solid var(--gold);padding:26px 22px calc(26px + env(safe-area-inset-bottom,0px));color:var(--parch)}
 .gs-sheet.show{transform:translate(-50%,0);visibility:visible;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .gs-sheet-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:32px}
-.gs-mj .gs-sheet .gs-ph{aspect-ratio:4/5;background:var(--umber)}
+.gs-mj .gs-sheet .gs-ph{position:relative;display:block;aspect-ratio:4/5;background:#fff}
+.gs-mj .gs-sheet .gs-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.gs-mj .gs-sheet .gs-ph svg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.gs-mj .gs-sheet .gs-ph.is-empty{background:var(--umber)}
 .gs-mj .gs-x{position:absolute;top:8px;right:10px;background:none;border:0;font-size:1.8rem;line-height:1;padding:6px 10px;color:var(--parch)}
 .gs-mj .gs-s-ref{font-family:var(--caps);color:var(--gold-hi);letter-spacing:.08em;margin:0}
 .gs-mj .gs-s-name{font-family:var(--display);font-weight:400;font-size:clamp(1.8rem,4vw,2.4rem);line-height:1.1;margin:6px 0 4px}
@@ -186,7 +189,7 @@
   .gs-rail{left:14px;gap:14px}
   .gs-rail a span{display:none}
   .gs-sheet-grid{grid-template-columns:1fr;gap:18px}
-  .gs-mj .gs-sheet .gs-ph{aspect-ratio:16/11}
+  .gs-mj .gs-sheet .gs-ph{aspect-ratio:auto;height:min(40vh,340px)}
 }
 @media (max-width:480px){
   .gs-doors{gap:10px}
@@ -495,7 +498,7 @@
       d.options.forEach(function(name,i){var vals=[];d.variants.forEach(function(v){if(vals.indexOf(v.options[i])<0)vals.push(v.options[i])});if(vals.length===1)state.sel[i]=vals[0]});
       lastFocus=trigger;
       sheet.innerHTML='<button type="button" class="gs-x" data-gs-close aria-label="Close">×</button>'+
-        '<div class="gs-sheet-grid"><div class="gs-ph">'+(d.image?'<img src="'+esc(d.image)+'" alt="">':TEE)+'</div><div>'+
+        '<div class="gs-sheet-grid"><div class="gs-ph'+(d.image?'':' is-empty')+'">'+(d.image?'<img src="'+esc(d.image)+'" alt="'+esc(d.name)+'" width="900" height="900" decoding="async">':TEE)+'</div><div>'+
         (d.ref?'<p class="gs-s-ref">'+esc(d.ref)+'</p>':'')+
         '<h2 class="gs-s-name">'+esc(d.name)+'</h2><p class="gs-s-price" data-gs-price>'+esc(priceFor())+'</p>'+
         (d.note?'<p class="gs-s-note">'+esc(d.note)+'</p>':'')+
