@@ -126,7 +126,7 @@
     <style>{{ settings.custom_css }}</style>
     {%- endif -%}
 
-  {% render 'media-loader' %}
+  {%- comment -%} Clean Slate's media-loader removed: it hid every image (opacity 0) until its own script marked it loaded, which never happened for images added later (the journey popup photo) and flashed white loaders on the dark site. {%- endcomment -%}
 
 
 {%- if settings.notification_style == 'panel' -%}

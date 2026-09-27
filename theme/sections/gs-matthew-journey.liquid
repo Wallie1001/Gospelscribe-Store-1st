@@ -162,10 +162,10 @@
 .gs-sheet.show{transform:translate(-50%,0);visibility:visible;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .gs-sheet-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:32px}
 .gs-mj .gs-sheet .gs-ph{position:relative;display:block;aspect-ratio:4/5;background:#fff}
-.gs-mj .gs-sheet .gs-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.gs-mj .gs-sheet .gs-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:1!important;visibility:visible!important}
 .gs-mj .gs-sheet .gs-ph svg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
 .gs-mj .gs-sheet .gs-ph.is-empty{background:var(--umber)}
-.gs-mj .gs-x{position:absolute;top:8px;right:10px;background:none;border:0;font-size:1.8rem;line-height:1;padding:6px 10px;color:var(--parch)}
+.gs-mj .gs-x{position:absolute;z-index:5;top:10px;right:10px;width:42px;height:42px;display:grid;place-items:center;background:rgba(21,17,14,.88);border:1px solid rgba(201,162,77,.5);border-radius:50%;font-size:1.6rem;line-height:1;padding:0;color:var(--parch)}
 .gs-mj .gs-s-ref{font-family:var(--caps);color:var(--gold-hi);letter-spacing:.08em;margin:0}
 .gs-mj .gs-s-name{font-family:var(--display);font-weight:400;font-size:clamp(1.8rem,4vw,2.4rem);line-height:1.1;margin:6px 0 4px}
 .gs-mj .gs-s-price{color:var(--parch-dim);font-style:italic;margin:0 0 14px;font-size:1.1rem}
@@ -505,7 +505,7 @@
       var el=document.getElementById('gs-data-'+bid);if(!el)return;
       var d;try{d=JSON.parse(el.textContent)}catch(err){window.location=trigger.href;return}
       var tpl=document.getElementById('gs-img-'+bid);
-      var photo=tpl&&tpl.innerHTML.trim()?tpl.innerHTML.trim():'';
+      var photo=tpl&&tpl.innerHTML.trim()?tpl.innerHTML.trim().replace('<img ','<img data-skip-fade class="ml-loaded" '):'';
       state={d:d,sel:[]};
       d.options.forEach(function(name,i){var vals=[];d.variants.forEach(function(v){if(vals.indexOf(v.options[i])<0)vals.push(v.options[i])});if(vals.length===1)state.sel[i]=vals[0]});
       lastFocus=trigger;
