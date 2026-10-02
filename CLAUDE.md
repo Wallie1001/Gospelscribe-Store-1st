@@ -131,3 +131,12 @@ Bryant wanted no Clean Slate look at all. Everything visible on the working copy
 - Clean Slate's `snippets/media-loader.liquid` sets every `.shopify-section img` to opacity 0 until its script adds `.ml-loaded`, and that script only runs on DOMContentLoaded. Any image inserted later by JS stayed invisible; this caused the blank journey popup photo.
 - Removed `{% render 'media-loader' %}` from the Matthew theme's layout. Dynamically inserted images should still carry `data-skip-fade` as a backstop.
 - The popup photo is now rendered by Liquid into `<template id="gs-img-{block.id}">` (block setting `popup_image`, falling back to the product's featured image).
+
+## Faith Clips Finder (Oct 2, 2026)
+Separate from the store. Lives in `faith-clips/` + `.github/workflows/faith-clips-*.yml` (this branch is the repo's default branch, so the schedules run from it).
+- Daily 6 AM PT search → top 10 clips into Bryant's Google Sheet; 7 AM PT email of top 5. Manual "Run workflow" button; "Check My Setup" workflow tests every key.
+- Python: YouTube Data API v3 (key), youtube-transcript-api (captions only, may be IP-blocked on GitHub runners; optional Webshare proxy secrets), faith RSS feeds, Claude `claude-opus-5-5` with structured output + `fallbacks: "default"`, gspread service account, Gmail SMTP app password.
+- Quotes are verified in code against the transcript (`faithclips/claude.py` `validate`); hooks with non-verbatim quoted words are dropped.
+- The Sheet is the memory: Clips / Channels (Approved Yes/New/No) / Seen / Log tabs. Starter list = 35 channels Bryant approved (incl. Elevation, Lakewood, Transformation Church; no Catholic channels added; filter requires Jesus-centered content).
+- Settings: `faith-clips/faithclips/config.py`. Tests: `cd faith-clips && pytest` (all external services faked).
+- Bryant still needs to do the README setup (Google Cloud key + service account, Sheet, Gmail app password, Anthropic key, 6 GitHub secrets).

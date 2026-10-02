@@ -1,0 +1,64 @@
+# Faith Clips Finder: finds new clips every morning at 6 AM Pacific.
+# GitHub's clock is UTC and ignores daylight saving, so this starts at both
+# 13:05 and 14:05 UTC; the code itself only runs once, at/after 5:45 AM Pacific.
+name: Faith Clips - Daily Search
+
+on:
+  schedule:
+    - cron: "5 13 * * *"
+    - cron: "5 14 * * *"
+  workflow_dispatch:
+    inputs:
+      send_email:
+        description: "Email me this run's top 5 when it finishes"
+        type: choice
+        options: ["yes", "no"]
+        default: "yes"
+
+permissions:
+  contents: read
+  actions: write   # only used to keep the schedule switched on (see last step)
+
+concurrency:
+  group: faith-clips
+  cancel-in-progress: false
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: faith-clips
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: faith-clips/requirements.txt
+      - run: pip install -r requirements.txt
+      - name: Find today's clips
+        run: python -m faithclips run
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          TRANSCRIPT_PROXY_URL: ${{ secrets.TRANSCRIPT_PROXY_URL }}
+          WEBSHARE_PROXY_USERNAME: ${{ secrets.WEBSHARE_PROXY_USERNAME }}
+          WEBSHARE_PROXY_PASSWORD: ${{ secrets.WEBSHARE_PROXY_PASSWORD }}
+          SEND_EMAIL: ${{ inputs.send_email || 'yes' }}
+      # GitHub pauses scheduled jobs in repos with no commits for 60 days.
+      # Re-enabling both workflows every day resets that timer.
+      - name: Keep the daily schedule switched on
+        if: always()
+        working-directory: .
+        run: |
+          gh api -X PUT "repos/${{ github.repository }}/actions/workflows/faith-clips-daily.yml/enable" || true
+          gh api -X PUT "repos/${{ github.repository }}/actions/workflows/faith-clips-email.yml/enable" || true
+        env:
+          GH_TOKEN: ${{ github.token }}
